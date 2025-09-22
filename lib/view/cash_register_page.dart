@@ -9,7 +9,7 @@ class CashRegisterPage extends StatelessWidget {
     return Scaffold(
       body: Row(
           children: [
-          ProductGridButton(),
+          const ProductGridButton(),
           Expanded(
             flex: 4,
             child: Container(

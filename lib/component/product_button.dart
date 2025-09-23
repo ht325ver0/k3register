@@ -7,21 +7,6 @@ class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
 
-  Color _getTasteColor(String taste) {
-    switch (taste) {
-      case '甘口':
-        return Colors.amber[200]!;
-      case '中辛':
-        return Colors.orange[300]!;
-      case '辛口':
-        return Colors.red[300]!;
-      case 'デス':
-        return Colors.black;
-      default:
-        return Colors.grey[300]!;
-    }
-  }
-
   const ProductCard({super.key, required this.product, required this.onTap});
 
   @override
@@ -75,14 +60,13 @@ class ProductCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4), // 少し隙間を空ける
 
-                    product.taste.isNotEmpty
+                    product.taste != null
                         ? Chip(
                             label: Text(
-                              product.taste,
-                              // 「デス」の背景色が黒なので、文字色を白にする
-                              style: TextStyle(fontSize: 12, color: product.taste == 'デス' ? Colors.white : Colors.black87),
+                              product.taste!.displayName,
+                              style: TextStyle(fontSize: 12, color: product.taste!.textColor),
                             ),
-                            backgroundColor: _getTasteColor(product.taste), 
+                            backgroundColor: product.taste!.backgroundColor,
                             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                             labelPadding: EdgeInsets.zero,

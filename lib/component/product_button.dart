@@ -12,10 +12,7 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return SizedBox(
-      width: 160,
-      height: 300,
-      child: Card(
+    return Card(
         clipBehavior: Clip.antiAlias, // 子ウィジェットがカードの角をはみ出さないように設定
         elevation: 4.0, // カードの影の濃さ
         shape: RoundedRectangleBorder(
@@ -73,9 +70,9 @@ class ProductCard extends StatelessWidget {
                             visualDensity: VisualDensity.compact,
                           )
                         : const SizedBox.shrink(),
-                    const Spacer(), // 価格を一番下に配置するためのスペーサー
+                    const Spacer(), 
 
-                    // 価格の表示
+          
                     Text(
                       '¥${product.price}',
                       style: const TextStyle(
@@ -88,9 +85,8 @@ class ProductCard extends StatelessWidget {
               ),
               ),
             ],
-          ),
-        ),
-      ),
-    );
+          ), // Column
+        ), // InkWell
+      ); // Card
   }
 }

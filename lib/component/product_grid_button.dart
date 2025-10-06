@@ -22,8 +22,12 @@ class ProductGridButton extends StatelessWidget {
     return Expanded(
       flex: 6, // 左側の領域の比率を6に設定
       child: GridView.count(
-        crossAxisCount: 4,
-        children: 
+        padding: const EdgeInsets.all(8.0), // グリッド全体に余白を追加
+        crossAxisCount: 4, // 横方向のアイテム数
+        mainAxisSpacing: 8.0, // 縦方向のアイテム間のスペース
+        crossAxisSpacing: 8.0, // 横方向のアイテム間のスペース
+        childAspectRatio: 0.8, // アイテムの縦横比 (幅1に対して高さ0.8)
+        children:
           mock_products.map((product){
             return ProductCard(product: product, onTap:()=>{});
           }).toList(),

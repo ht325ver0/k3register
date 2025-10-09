@@ -7,10 +7,10 @@ import 'package:k3register/model/cart_product.dart';
 class CartCard extends ConsumerWidget {
     
   // final VoidCallback onTap; // onTapはまだ使われていないので一旦コメントアウト
-  final CartProduct cart_product;
+  final CartProduct cartProduct;
 
 
-  const CartCard({super.key, required this.cart_product});
+  const CartCard({super.key, required this.cartProduct});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,21 +34,21 @@ class CartCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(cart_product.product.name,
+                    Text(cartProduct.product.name,
                         style: const TextStyle(fontSize: 16)),
-                    if (cart_product.product.taste != null &&
-                        cart_product.product.taste != Taste.none)
+                    if (cartProduct.product.taste != null &&
+                        cartProduct.product.taste != Taste.none)
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
                         child: Chip(
                           label: Text(
-                            cart_product.product.taste!.displayName,
+                            cartProduct.product.taste!.displayName,
                             style: TextStyle(
                                 fontSize: 10,
-                                color: cart_product.product.taste!.textColor),
+                                color: cartProduct.product.taste!.textColor),
                           ),
                           backgroundColor:
-                              cart_product.product.taste!.backgroundColor,
+                              cartProduct.product.taste!.backgroundColor,
                           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           visualDensity: VisualDensity.compact,
                         ),
@@ -68,7 +68,7 @@ class CartCard extends ConsumerWidget {
                     color: Colors.grey[400], // colorをdecorationの中に移動
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text('${cart_product.quantity}',
+                  child: Text('${cartProduct.quantity}',
                       style: const TextStyle(fontSize: 16)),
                 ),
                 // 数量を増やすボタン

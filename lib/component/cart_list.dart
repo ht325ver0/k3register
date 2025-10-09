@@ -29,14 +29,11 @@ class CartList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 6, // 左側の領域の比率を6に設定
-      child: ListView(
-        children:
-          mock_cart.map((product){
-            return CartCard(cart_product: product);
-          }).toList(),
-      ),
-    );
+    return ListView.builder(
+        itemCount: mock_cart.length,
+        itemBuilder: (context, index) {
+          return CartCard(cartProduct: mock_cart[index]);
+        },
+      );
   }
 }

@@ -28,20 +28,63 @@ class TotalCounter extends StatelessWidget {
 
     final int finalPrice = regularPrice - discountAmount;
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text("割引条件: ${discountRatio}個ごとに${discountMoney}円引き"),
-          const SizedBox(height: 8),
-          Text("商品点数: $totalQuantity 点"),
-          Text("定価合計: ¥$regularPrice"),
-          Text("割引額: -¥$discountAmount", style: const TextStyle(color: Colors.red)),
-          const Divider(),
-          Text("合計金額: ¥$finalPrice",
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-        ],
+    // スタイルを定義しておくと、一貫性のあるUIを保ちやすくなります。
+    final labelStyle = Theme.of(context).textTheme.titleMedium;
+    final valueStyle = Theme.of(context).textTheme.titleMedium;
+
+    return Material(
+      elevation: 8.0, // カートリストとの区別を明確にするための影
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("商品点数", style: labelStyle),
+                Text("$totalQuantity 点", style: valueStyle),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("定価合計", style: labelStyle),
+                Text("¥$regularPrice", style: valueStyle),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("割引額", style: labelStyle?.copyWith(color: Colors.red)),
+                Text("-¥$discountAmount",
+                    style: valueStyle?.copyWith(color: Colors.red)),
+              ],
+            ),
+            const Divider(height: 24, thickness: 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("合計金額",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold)),
+                Text("¥$finalPrice",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: 会計処理のダイアログなどを表示
+              },
+              style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16)),
+              child: const Text("お会計", style: TextStyle(fontSize: 18)),
+            ),
+          ],
+        ),
       ),
     );
   }

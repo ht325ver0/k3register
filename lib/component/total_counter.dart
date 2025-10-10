@@ -15,13 +15,9 @@ class TotalCounter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int regularPrice = 0;
-    int totalQuantity = 0;
 
-    for (final cartProduct in cartProducts) {
-      regularPrice += cartProduct.product.price * cartProduct.quantity;
-      totalQuantity += cartProduct.quantity;
-    }
+    final totalQuantity = cartProducts.fold<int>(0, (sum, item) => sum + item.quantity);
+    final regularPrice = cartProducts.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
 
     final int discountAmount =
         discountRatio > 0 ? discountMoney * (totalQuantity ~/ discountRatio) : 0;

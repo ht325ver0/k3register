@@ -7,8 +7,8 @@ import 'package:k3register/mock_data/cart_mock.dart';
 class CashRegisterPage extends StatelessWidget {
   const CashRegisterPage({super.key});
 
-  static int mockDiscountMoney = 50;
-  static int mockDiscountRatio = 3;
+  static const int mockDiscountMoney = 50;
+  static const int mockDiscountRatio = 3;
 
 
 

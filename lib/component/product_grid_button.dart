@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k3register/component/product_button.dart';
 import 'package:k3register/model/product.dart';
 
-const List<Product> mock_products = [
+final List<Product> mock_products = [
   Product(id:1,name:"もも",price: 100,taste: Taste.amakuchi, quantity: 100,icon:Icons.kebab_dining),
   Product(id:2,name:"もも",price:100,taste: Taste.chukara,quantity: 100,icon:Icons.kebab_dining),
   Product(id:3,name:"もも",price:100,taste: Taste.karakuchi,quantity: 100,icon:Icons.kebab_dining),

@@ -4,6 +4,17 @@ import 'package:k3register/model/product.dart';
 import 'package:k3register/model/cart_product.dart';
 
 
-final cartProvider = StateProvider<List<CartProduct>>((ref) {
-  return [];
-});
+class NoteNotifer extends Notifier<List<CartProduct>>{
+  @override
+  List<CartProduct> build() {
+    return [];
+  }
+
+  void add2Cart(Product product,int quantity) {
+    state = [
+      ...state,
+      CartProduct(product: product, quantity: quantity),
+    ];
+  }
+
+}

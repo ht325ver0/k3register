@@ -1,20 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k3register/model/product.dart';
 import 'package:k3register/model/cart_product.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 
-class NoteNotifer extends Notifier<List<CartProduct>>{
+part 'cart_provider.g.dart';
+
+@riverpod
+class Cart extends _$Cart {
   @override
-  List<CartProduct> build() {
-    return [];
+  List<CartProduct> build() => [];
+
+  void addCart(CartProduct product) {
+    state = [...state, product];
   }
 
-  void add2Cart(Product product,int quantity) {
-    state = [
-      ...state,
-      CartProduct(product: product, quantity: quantity),
-    ];
-  }
 
 }

@@ -37,6 +37,7 @@ class Cart extends _$Cart {
   }
 
   void decrement(CartProduct cartProduct) {
+    // 数量が1より大きい場合のみ、1減らす
     if (cartProduct.quantity > 1) {
       state = [
         for (final item in state)
@@ -45,9 +46,6 @@ class Cart extends _$Cart {
           else
             item,
       ];
-    } else {
-      // 数量が1の時にdecrementしたら削除
-      state = state.where((item) => item != cartProduct).toList();
     }
   }
 

@@ -13,5 +13,34 @@ class Cart extends _$Cart {
     state = [...state, product];
   }
 
+  void increment(CartProduct cartProduct) {
+    state = [
+      for (final item in state)
+        if (item == cartProduct)
+          item.copyWith(quantity: item.quantity + 1)
+        else
+          item,
+    ];
+  }
+
+  void decrement(CartProduct cartProduct) {
+    if (cartProduct.quantity > 1) {
+      state = [
+        for (final item in state)
+          if (item == cartProduct)
+            item.copyWith(quantity: item.quantity - 1)
+          else
+            item,
+      ];
+    } else {
+      // 数量が1の時にdecrementしたら削除
+      state = state.where((item) => item != cartProduct).toList();
+    }
+  }
+
+  void remove(CartProduct cartProduct) {
+    state = state.where((item) => item != cartProduct).toList();
+  }
+
 
 }

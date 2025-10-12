@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:k3register/component/cart_card.dart';
 import 'package:k3register/model/cart_product.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k3register/provider/cart_provider.dart';
 
 
 
-class CartList extends ConsumerWidget {
+
+class CartList extends StatelessWidget {
   final List<CartProduct> cartProducts;
   const CartList({super.key, required this.cartProducts});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final cartProducts = ref.watch(cartProvider);
+  Widget build(BuildContext context) {
     
     return ListView.builder(
         itemCount: cartProducts.length,

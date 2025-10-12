@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/product_button.dart';
 import 'package:k3register/mock_data/product_mock.dart';
-import 'package:k3register/model/product.dart';
 import 'package:k3register/provider/cart_provider.dart';
 
 

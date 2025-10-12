@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/product_grid_button.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/component/total_counter.dart';
-import 'package:k3register/mock_data/cart_mock.dart';
-import 'package:riverpod/riverpod.dart';
 import 'package:k3register/provider/cart_provider.dart';
 
 class CashRegisterPage extends ConsumerWidget {

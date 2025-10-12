@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k3register/model/cart_product.dart';
+import 'package:k3register/view/accounting_page.dart';
 
 class TotalCounter extends StatelessWidget {
   // 1. 単一のCartProductではなく、List<CartProduct>を受け取るように変更
@@ -73,11 +74,15 @@ class TotalCounter extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // TODO: 会計処理のダイアログなどを表示
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const AccountingPage()
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16)),
-              child: const Text("お会計", style: TextStyle(fontSize: 18)),
+                  child: const Text("お会計", style: TextStyle(fontSize: 18)),
             ),
           ],
         ),

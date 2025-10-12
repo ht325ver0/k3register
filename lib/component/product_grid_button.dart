@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/product_button.dart';
-import 'package:k3register/model/product.dart';
+import 'package:k3register/mock_data/product_mock.dart';
+import 'package:k3register/provider/cart_provider.dart';
 
-const List<Product> mock_products = [
-  Product(id:1,name:"もも",price: 100,taste: Taste.amakuchi, quantity: 100,icon:Icons.kebab_dining),
-  Product(id:2,name:"もも",price:100,taste: Taste.chukara,quantity: 100,icon:Icons.kebab_dining),
-  Product(id:3,name:"もも",price:100,taste: Taste.karakuchi,quantity: 100,icon:Icons.kebab_dining),
-  Product(id:4,name:"もも",price:100,taste: Taste.death,quantity: 100,icon: Icons.kebab_dining),
-  Product(id:5,name:"皮",price:100,taste: Taste.amakuchi,quantity:100,icon:Icons.kebab_dining),
-  Product(id:6,name:"皮",price:100,taste: Taste.chukara,quantity:100,icon:Icons.kebab_dining),
-  Product(id:7,name:"皮",price:100,taste: Taste.karakuchi,quantity:100,icon:Icons.kebab_dining),
-  Product(id:8,name:"皮",price:100,taste: Taste.death,quantity:100,icon:Icons.kebab_dining),
 
-];
-
-class ProductGridButton extends StatelessWidget {
+class ProductGridButton extends ConsumerWidget {
   const ProductGridButton({super.key});
 
+  
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Expanded(
       flex: 6, // 左側の領域の比率を6に設定
       child: GridView.count(
@@ -29,7 +22,10 @@ class ProductGridButton extends StatelessWidget {
         childAspectRatio: 0.8, // アイテムの縦横比 (幅1に対して高さ0.8)
         children:
           mock_products.map((product){
-            return ProductCard(product: product, onTap:()=>{});
+            return ProductCard(
+              product: product, 
+              onTap:()=> ref.read(cartProvider.notifier).addProduct(product)
+            );
           }).toList(),
       ),
     );

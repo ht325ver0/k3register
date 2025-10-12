@@ -1,14 +1,18 @@
 import 'package:k3register/model/product.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CartProduct {
+part 'cart_product.freezed.dart';
+part 'cart_product.g.dart';
 
-  final Product product;
-  final int quantity;
+@freezed
+class CartProduct with _$CartProduct {
 
-  const CartProduct({
-    required this.product,
-    required this.quantity,
-  });
+  const factory CartProduct({
+    required Product product,
+    required int quantity,
+  }) = _CartProduct;
 
-  
+  // JSONからインスタンスを生成するためのfactoryコンストラクタ
+  factory CartProduct.fromJson(Map<String, dynamic> json) => 
+    _$CartProductFromJson(json);
 }

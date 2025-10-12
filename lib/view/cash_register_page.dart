@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/product_grid_button.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/component/total_counter.dart';
-import 'package:k3register/mock_data/cart_mock.dart';
+import 'package:k3register/provider/cart_provider.dart';
 
-class CashRegisterPage extends StatelessWidget {
+class CashRegisterPage extends ConsumerWidget {
   const CashRegisterPage({super.key});
 
   static const int mockDiscountMoney = 50;
   static const int mockDiscountRatio = 3;
 
-
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final cartProducts = ref.watch(cartProvider);
+
     return Scaffold(
       body: Row(
         children: [
@@ -26,12 +27,12 @@ class CashRegisterPage extends StatelessWidget {
               Expanded(
                 child: Container(
                   color: Colors.blueGrey[50], // 背景色を少し薄く調整
-                  child: const CartList(),
+                  child: CartList(cartProducts: cartProducts),
                 ),
               ),
               // 合計金額表示エリア
               TotalCounter(
-                  cartProducts: mock_cart,
+                  cartProducts: cartProducts,
                   discountMoney: mockDiscountMoney,
                   discountRatio: mockDiscountRatio)
             ]),

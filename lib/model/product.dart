@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'product.freezed.dart';
+part 'product.g.dart';
 
 enum Taste {
   amakuchi('甘口', Color.fromARGB(225, 255, 224, 130)), // ! を追加
@@ -14,20 +18,21 @@ enum Taste {
   Color get textColor => this == Taste.death ? Colors.white : Colors.black87;
 }
 
-class Product {
-  final int id;
-  final String name;
-  final int price;
-  final Taste? taste;
-  final int quantity;
-  final IconData? icon;
+@freezed
+class Product with _$Product {
+  const factory Product({
+    required int id,
+    required String name,
+    required int price,
+    Taste? taste,
+    required int quantity,
+    // IconDataはJSONにシリアライズできないため、変換対象から除外します
+    @JsonKey(includeFromJson: false, includeToJson: false) IconData? icon,
+  }) = _Product;
 
-  const Product({ // コンストラクタに const を追加
-    required this.id,
-    required this.name,
-    required this.price,
-    this.taste,
-    required this.quantity,
-    this.icon,
-  });
+  // Productクラスが他のfreezedクラスから参照されるため、
+  // privateなコンストラクタを追加してfreezedが正しく動作するようにします。
+  const Product._();
+
+  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
 }

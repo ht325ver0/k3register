@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/product_button.dart';
-import 'package:k3register/model/cart_product.dart';
 import 'package:k3register/mock_data/product_mock.dart';
+import 'package:k3register/model/product.dart';
 import 'package:k3register/provider/cart_provider.dart';
 
 
 class ProductGridButton extends ConsumerWidget {
   const ProductGridButton({super.key});
 
+  
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     return Expanded(
       flex: 6, // 左側の領域の比率を6に設定
       child: GridView.count(
@@ -24,7 +25,7 @@ class ProductGridButton extends ConsumerWidget {
           mock_products.map((product){
             return ProductCard(
               product: product, 
-              onTap:()=> ref.read(cartProvider.notifier).addCart(CartProduct(product: product, quantity: 1))
+              onTap:()=> ref.read(cartProvider.notifier).addProduct(product)
             );
           }).toList(),
       ),

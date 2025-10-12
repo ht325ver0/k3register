@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/model/product.dart';
 import 'package:k3register/model/cart_product.dart';
+import 'package:k3register/provider/cart_provider.dart';
 
 /// 商品データを表現するクラス
 class CartCard extends ConsumerWidget {
@@ -59,8 +60,9 @@ class CartCard extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.remove),
                   color: Colors.blue,
-                  // onPressedに空の関数を設定してボタンを有効化
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(cartProvider.notifier).decrement(cartProduct);
+                  },
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -77,7 +79,7 @@ class CartCard extends ConsumerWidget {
                   color: Colors.pink,
                   // onPressedに空の関数を設定してボタンを有効化
                   onPressed: () {
-                    
+                    ref.read(cartProvider.notifier).increment(cartProduct);
                   },
                 ),
                 const SizedBox(width: 16), // ボタン間のスペース
@@ -86,7 +88,9 @@ class CartCard extends ConsumerWidget {
                   icon: const Icon(Icons.delete),
                   color: Colors.grey[600],
                   // onPressedに空の関数を設定してボタンを有効化
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(cartProvider.notifier).remove(cartProduct);
+                  },
                 )
               ],
             ),

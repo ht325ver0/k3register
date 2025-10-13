@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
 import 'view/home_page.dart';
 
 Future<void> main() async {
@@ -11,8 +12,12 @@ Future<void> main() async {
 
   WidgetsFlutterBinding.ensureInitialized(); // Flutterの初期化を確認
   await Supabase.initialize(
-    url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    url: dotenv.env['SUPABASE_URL'] ??
+        (throw ArgumentError(
+            'SUPABASE_URL is not set in .env file. Please create .env file and add SUPABASE_URL.')),
+    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ??
+        (throw ArgumentError(
+            'SUPABASE_ANON_KEY is not set in .env file. Please create .env file and add SUPABASE_ANON_KEY.')),
   );
   runApp(const ProviderScope(child: MyApp()));
 }

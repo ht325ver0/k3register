@@ -1,6 +1,7 @@
 import 'package:k3register/model/product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter/foundation.dart';
 
 part 'product_repository.g.dart';
 
@@ -43,7 +44,7 @@ class ProductRepository {
 
       return products;
     } catch (e) {
-      print('Error fetching products: $e');
+      debugPrint('Error fetching products: $e');
       rethrow;
     }
   }

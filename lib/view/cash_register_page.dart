@@ -4,6 +4,8 @@ import 'package:k3register/component/product_grid_button.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/component/total_counter.dart';
 import 'package:k3register/provider/cart_provider.dart';
+import 'package:k3register/provider/product_provider.dart';
+
 
 class CashRegisterPage extends ConsumerWidget {
   const CashRegisterPage({super.key});
@@ -11,14 +13,17 @@ class CashRegisterPage extends ConsumerWidget {
   static const int mockDiscountMoney = 50;
   static const int mockDiscountRatio = 3;
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartProducts = ref.watch(cartProvider);
+    final cartProductsAsync = ref.watch(productsProvider);
+
 
     return Scaffold(
       body: Row(
         children: [
-          const ProductGridButton(),
+          ProductGridButton(products: cartProductsAsync),
           // ColumnをExpandedでラップして、利用可能な領域を確定させる
           Expanded(
             flex: 4, // 右側の領域の比率を4に設定

@@ -25,6 +25,7 @@ Map<String, dynamic> _$$ProductImplToJson(_$ProductImpl instance) =>
     };
 
 const _$TasteEnumMap = {
+  Taste.solt: 'solt',
   Taste.amakuchi: 'amakuchi',
   Taste.chukara: 'chukara',
   Taste.karakuchi: 'karakuchi',

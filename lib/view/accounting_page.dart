@@ -48,7 +48,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
         children: [
           // 左側: カートの中身
           Expanded(
-            flex: 4,
+            flex: 2,
             child: Column(
               children: [
                 Expanded(child: CartList(cartProducts: cart)),

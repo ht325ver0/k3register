@@ -8,64 +8,85 @@ class Keypad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // POSレジで一般的な4列レイアウトに変更
-    const keys = [
-      '7', '8', '9', 'C',
-      '4', '5', '6', '⌫', // Backspace
-      '1', '2', '3', 'OK',
-      '0', '00',
-    ];
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // 左側: 数字キーパッド
+        Expanded(flex: 3, child: _buildNumberKeypad()),
+        const SizedBox(width: 10),
+        // 右側: 金額ショートカットキー
+        Expanded(flex: 1, child: _buildShortcutKeypad()),
+      ],
+    );
+  }
 
+  /// 数字キーパッド部分を構築する
+  Widget _buildNumberKeypad() {
+    const keys = [
+      '7', '8', '9',
+      '4', '5', '6',
+      '1', '2', '3',
+      '0', '00', '⌫',
+    ];
     return GridView.builder(
-      // 親ウィジェットのサイズに合わせて描画する
       shrinkWrap: true,
-      // スクロールを無効化
       physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(8.0),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4, // 4列のグリッド
+        crossAxisCount: 3,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
-        childAspectRatio: 1.5, // ボタンの縦横比を調整
+        childAspectRatio: 1.5,
       ),
-      // 'OK'ボタンが縦に2スロット分、'0'と'00'の間に空きを作るため、アイテム数を調整
-      itemCount: keys.length + 2,
+      itemCount: keys.length,
       itemBuilder: (context, index) {
-        // 'OK'ボタンの縦長表示のためのレイアウト調整
-        if (index == 11) return const SizedBox.shrink(); // 'OK'ボタンの下半分
-        if (index == 14) return const SizedBox.shrink(); // '00'の隣の空きスペース
-
-        // インデックスの補正
-        int keyIndex = index;
-        if (keyIndex > 10) keyIndex--;
-        if (keyIndex > 12) keyIndex--;
-
-        final key = keys[keyIndex];
-
-        // 'OK'ボタンは縦に長く表示
-        if (key == 'OK') {
-          return GridTile(
-            child: _KeypadButton(
-              label: '確定',
-              onTap: () => onKeyPressed('OK'),
-              backgroundColor: Colors.green,
-              isLarge: true,
-            ),
-          );
-        }
-
-        // その他のボタン
+        final key = keys[index];
         return _KeypadButton(
           label: key,
           onTap: () => onKeyPressed(key),
-          // 機能キーは色を変えて分かりやすくする
-          backgroundColor: (key == 'C' || key == '⌫')
-              ? Colors.blueGrey[200]
-              : Colors.white,
+          backgroundColor: (key == '⌫') ? Colors.blueGrey[200] : Colors.white,
           textColor: Colors.black87,
         );
       },
     );
+  }
+
+  /// 金額ショートカットキー部分を構築する
+  Widget _buildShortcutKeypad() {
+    const shortcuts = ['C', '1000', '500', '100', '50', 'ピッタリ', 'OK'];
+    return Column(
+      children: shortcuts.map((key) {
+        // OKボタンだけ縦に長くする
+        // Expandedの代わりにSizedBoxで高さを指定する
+        return SizedBox(
+          height: 60, // ボタンの高さを固定値で指定
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 10.0),
+            child: SizedBox.expand( // 親のサイズいっぱいに広がる
+              child: _KeypadButton(
+                label: key,
+                onTap: () => onKeyPressed(key),
+                backgroundColor: _getShortcutButtonColor(key),
+                textColor: Colors.white,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  /// ショートカットキーの色を決定するヘルパー関数
+  Color? _getShortcutButtonColor(String key) {
+    switch (key) {
+      case 'OK':
+        return Colors.green;
+      case 'C':
+        return Colors.redAccent;
+      case 'ピッタリ':
+        return Colors.orange;
+      default:
+        return Colors.blue;
+    }
   }
 }
 
@@ -90,13 +111,11 @@ class _KeypadButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
+        minimumSize: const Size.fromHeight(50), // ボタンの最小高さを設定
         backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
         foregroundColor: textColor ?? Theme.of(context).colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: EdgeInsets.zero,
-        // isLargeがtrueの場合、縦に2スロット分の高さを確保
-        // GridTileと組み合わせることで実現
-        minimumSize: isLarge ? const Size(double.infinity, 120) : null,
       ).copyWith(
         // 影を調整してフラットなデザインに近づける
         elevation: MaterialStateProperty.all(2.0),

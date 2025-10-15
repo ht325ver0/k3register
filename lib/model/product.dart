@@ -5,6 +5,7 @@ part 'product.freezed.dart';
 part 'product.g.dart';
 
 enum Taste {
+  solt('塩', Color.fromARGB(223, 92, 239, 255)),
   amakuchi('甘口', Color.fromARGB(225, 255, 224, 130)), // ! を追加
   chukara('中辛', Color.fromARGB(225, 255, 183, 77)),
   karakuchi('辛口', Color.fromARGB(225, 229, 115, 115)),

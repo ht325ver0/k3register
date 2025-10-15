@@ -55,8 +55,6 @@ class Keypad extends StatelessWidget {
     const shortcuts = ['C', '1000', '500', '100', '50', 'ピッタリ', 'OK'];
     return Column(
       children: shortcuts.map((key) {
-        // OKボタンだけ縦に長くする
-        // Expandedの代わりにSizedBoxで高さを指定する
         return SizedBox(
           height: 60, // ボタンの高さを固定値で指定
           child: Padding(

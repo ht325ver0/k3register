@@ -14,6 +14,30 @@ class AccountingPage extends ConsumerStatefulWidget {
 class _AccountingPageState extends ConsumerState<AccountingPage> {
   String _displayValue = '';
 
+  void onKeyPressed(String value,int totalAmount) {
+    const shortcuts = ['1000', '500', '100', '50'];
+    setState(() {
+      if (value == 'C') {
+        _displayValue = '';
+      } else if (value == '⌫') {
+        if (_displayValue.isNotEmpty) {
+          _displayValue = _displayValue.substring(0, _displayValue.length - 1);
+        }
+      } else if (value == 'OK') {
+        // TODO: 確定処理
+        print('確定: $_displayValue');
+      } else if (value == 'ピッタリ') {
+        _displayValue = totalAmount.toString();
+      } else if (shortcuts.contains(value)) {
+        _displayValue = value;
+      } else {
+        if (_displayValue.length < 9) {
+          _displayValue += value;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
@@ -21,24 +45,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     final receivedAmount = int.tryParse(_displayValue) ?? 0;
     final change = receivedAmount - totalAmount;
 
-    void onKeyPressed(String value) {
-      setState(() {
-        if (value == 'C') {
-          _displayValue = '';
-        } else if (value == '⌫') {
-          if (_displayValue.isNotEmpty) {
-            _displayValue = _displayValue.substring(0, _displayValue.length - 1);
-          }
-        } else if (value == 'OK') {
-          // TODO: 確定処理
-          print('確定: $_displayValue');
-        } else {
-          if (_displayValue.length < 9) {
-            _displayValue += value;
-          }
-        }
-      });
-    }
+
 
     return Scaffold(
       appBar: AppBar(
@@ -68,7 +75,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
                   Text('お預かり: ¥$receivedAmount', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.blue)),
                   Text('お釣り: ¥${change > 0 ? change : 0}', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.green)),
                   const Spacer(),
-                  Keypad(onKeyPressed: onKeyPressed),
+                  Keypad(onKeyPressed: (value) => onKeyPressed(value, totalAmount)),
                 ],
               ),
             ),

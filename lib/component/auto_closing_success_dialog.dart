@@ -23,20 +23,29 @@ class _AutoClosingSuccessDialogState extends State<AutoClosingSuccessDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return const AlertDialog(
-      title: Column(
-        children: [
-          Text('会計完了'),
-          Icon(Icons.check_circle, color: Colors.green, size:50),
-          SizedBox(width: 8),
-        ],
-      ),
-      content: 
-      Column(
-        children: [
-          Text('待ち番号'),
-          Text('会計が完了しました。'),
-        ],
+    // AlertDialogのコンテンツをSizedBoxで囲み、サイズを指定する
+    return AlertDialog(
+      // shapeで角を丸くすると、よりモダンな見た目になります
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      // titleとcontentを一つのColumnにまとめる
+      content: SizedBox(
+        width: 300, // ダイアログの幅を指定
+        child: Column(
+          mainAxisSize: MainAxisSize.min, // Columnの高さをコンテンツに合わせる
+          children: [
+            const SizedBox(height: 16),
+            const Icon(Icons.check_circle, color: Colors.green, size: 60),
+            const SizedBox(height: 16),
+            Text('会計完了', style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 8),
+            const Text('会計が完了しました。'),
+            const SizedBox(height: 24),
+            const Text('待ち番号', style: TextStyle(color: Colors.grey)),
+            // TODO: ここに実際の待ち番号を表示する
+            const Text('123', style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/provider/cart_provider.dart';
 import 'package:k3register/component/keypad.dart';
+import 'package:k3register/infrastructure/orders_repository.dart';
+import 'package:k3register/model/order_item.dart';
+import 'package:k3register/model/order.dart';
 
 class AccountingPage extends ConsumerStatefulWidget {
   const AccountingPage({super.key});
@@ -24,8 +27,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
           _displayValue = _displayValue.substring(0, _displayValue.length - 1);
         }
       } else if (value == 'OK') {
-        // TODO: 確定処理
-        print('確定: $_displayValue');
+        // 確定処理を呼び出す
+        _handleCheckout();
       } else if (value == 'ピッタリ') {
         _displayValue = totalAmount.toString();
       } else if (shortcuts.contains(value)) {
@@ -38,10 +41,51 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     });
   }
 
+  /// 会計確定処理
+  Future<void> _handleCheckout() async {
+    // UIの操作を無効にするなど、ローディング表示をここに入れるとより親切
+
+    final cart = ref.read(cartProvider);
+    final totalAmount = ref.read(cartTotalProvider);
+
+    if (cart.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('カートが空です')));
+      return;
+    }
+
+    // Orderオブジェクトを作成
+    final order = Order(
+      totalPrice: totalAmount,
+      items: cart
+          .map((cartProduct) => OrderItem( // CartProductからOrderItemに変換
+                productId: cartProduct.product.id,
+                quantity: cartProduct.quantity,
+                price: cartProduct.product.price, // 販売時点の単価を記録
+              ))
+          .toList(),
+    );
+
+    try {
+      // Repositoryを呼び出して注文を保存
+      await ref.read(orderRepositoryProvider).saveOrder(order);
+
+      // 成功時の処理
+      // cart_providerにclearCartメソッドを追加する必要がある
+      ref.read(cartProvider.notifier).clearCart();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('会計が完了しました')));
+        Navigator.of(context).pop(); // 会計画面を閉じる
+      }
+    } catch (e) {
+      // エラー処理
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('注文の保存に失敗しました: $e')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
-    final totalAmount = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+    final totalAmount = ref.watch(cartTotalProvider);
     final receivedAmount = int.tryParse(_displayValue) ?? 0;
     final change = receivedAmount - totalAmount;
 

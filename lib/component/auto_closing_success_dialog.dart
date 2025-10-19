@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 /// 2秒後に自動で閉じる成功ダイアログ
 class AutoClosingSuccessDialog extends StatefulWidget {
-  const AutoClosingSuccessDialog({super.key});
+  final int orderId;
+
+  const AutoClosingSuccessDialog({super.key, required this.orderId});
 
   @override
   State<AutoClosingSuccessDialog> createState() => _AutoClosingSuccessDialogState();
@@ -41,8 +43,8 @@ class _AutoClosingSuccessDialogState extends State<AutoClosingSuccessDialog> {
             const Text('会計が完了しました。'),
             const SizedBox(height: 24),
             const Text('待ち番号', style: TextStyle(color: Colors.grey)),
-            // TODO: ここに実際の待ち番号を表示する
-            const Text('123', style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+            // 受け取った注文IDを表示する
+            Text(widget.orderId.toString(), style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
           ],
         ),

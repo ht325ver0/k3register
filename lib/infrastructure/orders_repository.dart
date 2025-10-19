@@ -8,7 +8,8 @@ part 'orders_repository.g.dart';
 /// 注文リポジトリのインターフェース
 abstract class IOrderRepository {
   /// 注文を保存する
-  Future<void> saveOrder(Order order);
+  /// 成功した場合、注文IDを返す
+  Future<int> saveOrder(Order order);
 }
 
 /// 注文データに関するデータアクセス層
@@ -16,7 +17,7 @@ class OrderRepository implements IOrderRepository {
   final _client = Supabase.instance.client;
 
   @override
-  Future<void> saveOrder(Order order) async {
+  Future<int> saveOrder(Order order) async {
     try {
       // OrderItemのリストを、Supabaseの関数が受け取れるJSON形式のリストに変換
       // OrderItem.toJson() はfreezedによって自動生成される
@@ -32,7 +33,11 @@ class OrderRepository implements IOrderRepository {
       debugPrint(params.toString());
 
       // SupabaseのRPC（データベース関数）を呼び出す
-      await _client.rpc('create_order', params: params);
+      final orderId = await _client.rpc('create_order', params: params);
+
+      // rpcの戻り値はdynamic型なので、intにキャストして返す
+      // Supabaseの関数が正しくintを返せば、このキャストは成功する
+      return orderId as int;
     } catch (e) {
       debugPrint('Error saving order: $e');
       // エラーを呼び出し元に伝えるために再スローする

@@ -3,6 +3,7 @@ import 'package:k3register/model/order.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+
 part 'orders_repository.g.dart';
 
 /// 注文リポジトリのインターフェース
@@ -10,11 +11,36 @@ abstract class IOrderRepository {
   /// 注文を保存する
   /// 成功した場合、注文IDを返す
   Future<int> saveOrder(Order order);
+
+  /// 未提供の注文リストをストリームで取得する
+  Stream<List<Order>> fetchOrdersStream();
 }
 
 /// 注文データに関するデータアクセス層
 class OrderRepository implements IOrderRepository {
   final _client = Supabase.instance.client;
+
+  @override
+  Stream<List<Order>> fetchOrdersStream() {
+    try {
+      // 1. Supabaseのリアルタイムストリームを構築
+      return _client
+          .from('orders')
+          .stream(primaryKey: ['id']) // 'id'を主キーとして変更を監視
+          // .select() を削除。Supabaseがリレーションを元に自動でネストしてくれます。
+          .eq('has_provided', false) // 3. 'has_provided'がfalseの注文のみに絞り込む
+          .order('created_at', ascending: true) // 4. 作成日時が古い順に並び替え
+          .map((listOfMaps) { // 5. 受け取ったデータを変換
+        // Supabaseから返ってきたList<Map<String, dynamic>>を
+        // List<Order>に変換する
+        return listOfMaps.map((map) => Order.fromJson(map)).toList();
+      });
+    } catch (e) {
+      debugPrint('Error fetching orders: $e');
+      rethrow;
+    }
+  }
+
 
   @override
   Future<int> saveOrder(Order order) async {
@@ -56,4 +82,10 @@ class OrderRepository implements IOrderRepository {
 @riverpod
 IOrderRepository orderRepository(OrderRepositoryRef ref) {
   return OrderRepository();
+}
+
+/// 未提供の注文リストをストリームで提供するProvider
+@riverpod
+Stream<List<Order>> ordersStream(OrdersStreamRef ref) {
+  return ref.read(orderRepositoryProvider).fetchOrdersStream();
 }

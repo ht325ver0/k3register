@@ -20,8 +20,14 @@ Order _$OrderFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Order {
+// idもモデルに含めておくと便利
+  int? get id => throw _privateConstructorUsedError;
+  @JsonKey(name: 'order_items')
   List<OrderItem> get items => throw _privateConstructorUsedError;
+  @JsonKey(name: 'total_price')
   int get totalPrice => throw _privateConstructorUsedError;
+  @JsonKey(name: 'has_provided')
+  bool get hasProvided => throw _privateConstructorUsedError;
 
   /// Serializes this Order to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -37,7 +43,11 @@ abstract class $OrderCopyWith<$Res> {
   factory $OrderCopyWith(Order value, $Res Function(Order) then) =
       _$OrderCopyWithImpl<$Res, Order>;
   @useResult
-  $Res call({List<OrderItem> items, int totalPrice});
+  $Res call(
+      {int? id,
+      @JsonKey(name: 'order_items') List<OrderItem> items,
+      @JsonKey(name: 'total_price') int totalPrice,
+      @JsonKey(name: 'has_provided') bool hasProvided});
 }
 
 /// @nodoc
@@ -55,10 +65,16 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? items = null,
     Object? totalPrice = null,
+    Object? hasProvided = null,
   }) {
     return _then(_value.copyWith(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       items: null == items
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
@@ -67,6 +83,10 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
           ? _value.totalPrice
           : totalPrice // ignore: cast_nullable_to_non_nullable
               as int,
+      hasProvided: null == hasProvided
+          ? _value.hasProvided
+          : hasProvided // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -78,7 +98,11 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
       __$$OrderImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<OrderItem> items, int totalPrice});
+  $Res call(
+      {int? id,
+      @JsonKey(name: 'order_items') List<OrderItem> items,
+      @JsonKey(name: 'total_price') int totalPrice,
+      @JsonKey(name: 'has_provided') bool hasProvided});
 }
 
 /// @nodoc
@@ -94,10 +118,16 @@ class __$$OrderImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = freezed,
     Object? items = null,
     Object? totalPrice = null,
+    Object? hasProvided = null,
   }) {
     return _then(_$OrderImpl(
+      id: freezed == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int?,
       items: null == items
           ? _value._items
           : items // ignore: cast_nullable_to_non_nullable
@@ -106,6 +136,10 @@ class __$$OrderImplCopyWithImpl<$Res>
           ? _value.totalPrice
           : totalPrice // ignore: cast_nullable_to_non_nullable
               as int,
+      hasProvided: null == hasProvided
+          ? _value.hasProvided
+          : hasProvided // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -114,14 +148,21 @@ class __$$OrderImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$OrderImpl implements _Order {
   const _$OrderImpl(
-      {required final List<OrderItem> items, required this.totalPrice})
+      {this.id,
+      @JsonKey(name: 'order_items') required final List<OrderItem> items,
+      @JsonKey(name: 'total_price') required this.totalPrice,
+      @JsonKey(name: 'has_provided') this.hasProvided = false})
       : _items = items;
 
   factory _$OrderImpl.fromJson(Map<String, dynamic> json) =>
       _$$OrderImplFromJson(json);
 
+// idもモデルに含めておくと便利
+  @override
+  final int? id;
   final List<OrderItem> _items;
   @override
+  @JsonKey(name: 'order_items')
   List<OrderItem> get items {
     if (_items is EqualUnmodifiableListView) return _items;
     // ignore: implicit_dynamic_type
@@ -129,11 +170,15 @@ class _$OrderImpl implements _Order {
   }
 
   @override
+  @JsonKey(name: 'total_price')
   final int totalPrice;
+  @override
+  @JsonKey(name: 'has_provided')
+  final bool hasProvided;
 
   @override
   String toString() {
-    return 'Order(items: $items, totalPrice: $totalPrice)';
+    return 'Order(id: $id, items: $items, totalPrice: $totalPrice, hasProvided: $hasProvided)';
   }
 
   @override
@@ -141,15 +186,18 @@ class _$OrderImpl implements _Order {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$OrderImpl &&
+            (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality().equals(other._items, _items) &&
             (identical(other.totalPrice, totalPrice) ||
-                other.totalPrice == totalPrice));
+                other.totalPrice == totalPrice) &&
+            (identical(other.hasProvided, hasProvided) ||
+                other.hasProvided == hasProvided));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_items), totalPrice);
+  int get hashCode => Object.hash(runtimeType, id,
+      const DeepCollectionEquality().hash(_items), totalPrice, hasProvided);
 
   /// Create a copy of Order
   /// with the given fields replaced by the non-null parameter values.
@@ -169,15 +217,25 @@ class _$OrderImpl implements _Order {
 
 abstract class _Order implements Order {
   const factory _Order(
-      {required final List<OrderItem> items,
-      required final int totalPrice}) = _$OrderImpl;
+      {final int? id,
+      @JsonKey(name: 'order_items') required final List<OrderItem> items,
+      @JsonKey(name: 'total_price') required final int totalPrice,
+      @JsonKey(name: 'has_provided') final bool hasProvided}) = _$OrderImpl;
 
   factory _Order.fromJson(Map<String, dynamic> json) = _$OrderImpl.fromJson;
 
+// idもモデルに含めておくと便利
   @override
+  int? get id;
+  @override
+  @JsonKey(name: 'order_items')
   List<OrderItem> get items;
   @override
+  @JsonKey(name: 'total_price')
   int get totalPrice;
+  @override
+  @JsonKey(name: 'has_provided')
+  bool get hasProvided;
 
   /// Create a copy of Order
   /// with the given fields replaced by the non-null parameter values.

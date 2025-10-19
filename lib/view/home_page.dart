@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:k3register/view/cash_register_page.dart';
+import 'package:k3register/view/order_check_page.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -15,7 +16,7 @@ class Home extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CashRegisterPage()
+                    builder: (context) => const CashRegisterPage()
                   ),
                 );
               },
@@ -31,7 +32,7 @@ class Home extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context) => const Home()
+                      builder: (context) => const OrderCheckPage()
                   ),
                 );
               },

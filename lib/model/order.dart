@@ -7,8 +7,11 @@ part 'order.g.dart';
 @freezed
 class Order with _$Order {
   const factory Order({
-    required List<OrderItem> items,
-    required int totalPrice,
+    // idもモデルに含めておくと便利
+    int? id,
+    @JsonKey(name: 'order_items') required List<OrderItem> items,
+    @JsonKey(name: 'total_price') required int totalPrice,
+    @Default(false) @JsonKey(name: 'has_provided') bool hasProvided,
   }) = _Order;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

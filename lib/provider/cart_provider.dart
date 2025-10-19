@@ -53,5 +53,18 @@ class Cart extends _$Cart {
     state = state.where((item) => item != cartProduct).toList();
   }
 
+  /// カートを空にする
+  void clearCart() {
+    state = [];
+  }
 
+
+}
+
+/// カート内の商品の合計金額を計算するProvider
+/// cartProviderの状態が変更されると、このProviderも自動的に再計算される
+@riverpod
+int cartTotal(CartTotalRef ref) {
+  final cart = ref.watch(cartProvider);
+  return cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
 }

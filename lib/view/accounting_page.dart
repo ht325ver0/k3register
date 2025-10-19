@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/provider/cart_provider.dart';
 import 'package:k3register/component/keypad.dart';
+import 'package:k3register/infrastructure/orders_repository.dart';
+import 'package:k3register/model/order_item.dart';
+import 'package:k3register/model/order.dart';
+import 'package:k3register/component/auto_closing_success_dialog.dart';
 
 class AccountingPage extends ConsumerStatefulWidget {
   const AccountingPage({super.key});
@@ -24,8 +28,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
           _displayValue = _displayValue.substring(0, _displayValue.length - 1);
         }
       } else if (value == 'OK') {
-        // TODO: 確定処理
-        print('確定: $_displayValue');
+        // 確定処理を呼び出す
+        _handleCheckout();
       } else if (value == 'ピッタリ') {
         _displayValue = totalAmount.toString();
       } else if (shortcuts.contains(value)) {
@@ -38,10 +42,73 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     });
   }
 
+  Future<int?> submitOrder() async {
+    final cart = ref.read(cartProvider);
+    final totalAmount = ref.read(cartTotalProvider);
+
+    if (cart.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('カートが空です')));
+      return null;
+    }
+
+    // Orderオブジェクトを作成
+    final order = Order(
+      totalPrice: totalAmount,
+      items: cart
+          .map((cartProduct) => OrderItem( // CartProductからOrderItemに変換
+                productId: cartProduct.product.id,
+                quantity: cartProduct.quantity,
+                price: cartProduct.product.price, // 販売時点の単価を記録
+              ))
+          .toList(),
+    );
+
+    try {
+      // Repositoryを呼び出して注文を保存
+      final orderId = await ref.read(orderRepositoryProvider).saveOrder(order);
+      return orderId;
+    } catch (e) {
+      // エラー処理
+      // エラーの詳細はリポジトリ層でデバッグ出力されている
+      return null;
+    }
+  }
+
+  /// 会計確定処理
+  Future<void> _handleCheckout() async {
+    // UIの操作を無効にするなど、ローディング表示をここに入れるとより親切
+    final orderId = await submitOrder();
+
+    if (!mounted) return;
+
+    if (orderId != null) {
+      // 成功ダイアログ
+      // ダイアログが閉じられた後に後続処理を実行
+      await showDialog(
+        context: context,
+        barrierDismissible: false, // ダイアログの外側をタップしても閉じない
+        builder: (context) => AutoClosingSuccessDialog(orderId: orderId),
+      );
+      // ダイアログが閉じた後にカートをクリアし、最初の画面に戻る
+      ref.read(cartProvider.notifier).clearCart();
+      if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      // 失敗ダイアログ
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: const Text('注文の処理に失敗しました。ネットワーク接続を確認して再度お試しください。'),
+          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
-    final totalAmount = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+    final totalAmount = ref.watch(cartTotalProvider);
     final receivedAmount = int.tryParse(_displayValue) ?? 0;
     final change = receivedAmount - totalAmount;
 

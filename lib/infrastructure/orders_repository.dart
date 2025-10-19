@@ -32,12 +32,18 @@ class OrderRepository implements IOrderRepository {
       debugPrint('--- Sending data to Supabase ---');
       debugPrint(params.toString());
 
-      // SupabaseのRPC（データベース関数）を呼び出す
-      final orderId = await _client.rpc('create_order', params: params);
+       // SupabaseのRPC（データベース関数）を呼び出す
+      final result = await _client.rpc('create_order', params: params);
 
-      // rpcの戻り値はdynamic型なので、intにキャストして返す
-      // Supabaseの関数が正しくintを返せば、このキャストは成功する
-      return orderId as int;
+      // rpcの戻り値がintであることを確認してから返す
+      if (result is int) {
+        return result;
+      } else {
+        // 予期しない型が返ってきた場合は、より詳細な情報を含む例外をスローする
+        throw Exception(
+            'create_order RPC returned an unexpected type. Expected int, but got ${result.runtimeType}. Value: $result');
+      }
+
     } catch (e) {
       debugPrint('Error saving order: $e');
       // エラーを呼び出し元に伝えるために再スローする

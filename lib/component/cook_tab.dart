@@ -18,16 +18,6 @@ class CookTab extends StatelessWidget {
             ],
           ),
         ),
-        body: const TabBarView(
-          children: <Widget>[
-            Center(
-              child: Text('調理待ち', style: TextStyle(fontSize: 32.0)),
-            ),
-            Center(
-              child: Text('呼び出し中', style: TextStyle(fontSize: 32.0)),
-            ),
-          ],
-        ),
       ),
     );
   }

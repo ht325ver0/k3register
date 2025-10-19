@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k3register/component/cook_tab.dart';
 import 'package:k3register/component/order_list.dart';
-import 'package:k3register/model/order_item.dart';
+import 'package:k3register/infrastructure/orders_repository.dart';
 import 'package:k3register/model/order.dart';
 
 class OrderCheckPage extends StatefulWidget {
@@ -16,40 +15,52 @@ class OrderCheckPage extends StatefulWidget {
 
 class _OrderCheckPageState extends State<OrderCheckPage> {
 
-  // late StreamSubscription<Object> subscription;
-  
   @override
   Widget build(BuildContext context) {
-    // OrderListに渡すためのモックデータを作成
-    const mockOrders = [
-      Order(
-        id: 99,
-        totalPrice: 1500,
-        items: [
-          OrderItem(productId: 1, quantity: 2, price: 500),
-          OrderItem(productId: 3, quantity: 1, price: 500),
-        ],
+    // このページ全体をDefaultTabControllerで囲む
+    return DefaultTabController(
+      length: 2, // タブの数
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('注文確認'),
+          bottom: const TabBar(
+            tabs: <Widget>[
+              Tab(text: '調理待ち'),
+              Tab(text: '呼び出し中'),
+            ],
+          ),
+        ),
+        body: const _OrderCheckBody(),
       ),
-      Order(
-        id: 100,
-        totalPrice: 1000,
-        items: [
-          OrderItem(productId: 2, quantity: 1, price: 500),
-          OrderItem(productId: 4, quantity: 1, price: 500),
-        ],
-      ),
-    ];
-
-    return Scaffold(
-      body: Column(
-        children: [
-          // CookTabが利用可能なスペース全体を占めるようにExpandedで囲む
-          const Expanded(child: CookTab()),
-          // OrderListが利用可能なスペースを占めるようにExpandedで囲む
-          const Expanded(child: OrderList(orders: mockOrders)),
-        ],
-      )
     );
   }
+}
 
+class _OrderCheckBody extends ConsumerWidget {
+  const _OrderCheckBody();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    // ordersStreamProviderを監視してリアルタイムにデータを取得
+    final ordersStream = ref.watch(ordersStreamProvider);
+
+    return ordersStream.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('エラー: $err')),
+      data: (orders) {
+        // has_providedがfalseのものを「調理待ち」、trueのものを「呼び出し中」に振り分ける
+        // （現状はfalseのものしか来ないが、将来的な拡張のため）
+        final cookingOrders = orders.where((o) => !o.hasProvided).toList();
+        final callingOrders = orders.where((o) => o.hasProvided).toList();
+
+        // TabBarViewで各リストを表示
+        return TabBarView(
+          children: [
+            OrderList(orders: cookingOrders),
+            OrderList(orders: callingOrders),
+          ],
+        );
+      },
+    );
+  }
 }

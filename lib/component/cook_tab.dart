@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:k3register/component/order_list.dart';
+import 'package:k3register/model/order.dart';
 
 class CookTab extends StatelessWidget {
-  const CookTab({super.key});
+  final List<Order> cookingOrders;
+  final List<Order> callingOrders;
+
+  const CookTab({
+    super.key,
+    required this.cookingOrders,
+    required this.callingOrders,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: 0, // 最初に表示するタブ
-      length: 2, // タブの数
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('ホーム'),
-          bottom: const TabBar(
-            tabs: <Widget>[
-              Tab(text: '調理待ち'),
-              Tab(text: '呼び出し中'),
-            ],
-          ),
-        ),
-      ),
+    // Scaffoldを削除し、TabBarViewを返す
+    return TabBarView(
+      children: <Widget>[
+        // 「調理待ち」タブの中身
+        OrderList(orders: cookingOrders),
+        // 「呼び出し中」タブの中身
+        OrderList(orders: callingOrders),
+      ],
     );
   }
-
 }

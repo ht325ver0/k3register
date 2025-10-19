@@ -6,6 +6,7 @@ import 'package:k3register/component/keypad.dart';
 import 'package:k3register/infrastructure/orders_repository.dart';
 import 'package:k3register/model/order_item.dart';
 import 'package:k3register/model/order.dart';
+import 'package:k3register/component/auto_closing_success_dialog.dart';
 
 class AccountingPage extends ConsumerStatefulWidget {
   const AccountingPage({super.key});
@@ -41,16 +42,13 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     });
   }
 
-  /// 会計確定処理
-  Future<void> _handleCheckout() async {
-    // UIの操作を無効にするなど、ローディング表示をここに入れるとより親切
-
+  Future<bool> submitOrder() async {
     final cart = ref.read(cartProvider);
     final totalAmount = ref.read(cartTotalProvider);
 
     if (cart.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('カートが空です')));
-      return;
+      return false;
     }
 
     // Orderオブジェクトを作成
@@ -68,17 +66,42 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     try {
       // Repositoryを呼び出して注文を保存
       await ref.read(orderRepositoryProvider).saveOrder(order);
-
-      // 成功時の処理
-      // cart_providerにclearCartメソッドを追加する必要がある
-      ref.read(cartProvider.notifier).clearCart();
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('会計が完了しました')));
-        Navigator.of(context).pop(); // 会計画面を閉じる
-      }
+      return true;
     } catch (e) {
       // エラー処理
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('注文の保存に失敗しました: $e')));
+      // エラーの詳細はリポジトリ層でデバッグ出力されている
+      return false;
+    }
+  }
+
+  /// 会計確定処理
+  Future<void> _handleCheckout() async {
+    // UIの操作を無効にするなど、ローディング表示をここに入れるとより親切
+    final isSuccess = await submitOrder();
+
+    if (!mounted) return;
+
+    if (isSuccess) {
+      // 成功ダイアログ
+      // ダイアログが閉じられた後に後続処理を実行
+      await showDialog(
+        context: context,
+        barrierDismissible: false, // ダイアログの外側をタップしても閉じない
+        builder: (context) => const AutoClosingSuccessDialog(),
+      );
+      // ダイアログが閉じた後にカートをクリアし、最初の画面に戻る
+      ref.read(cartProvider.notifier).clearCart();
+      if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+    } else {
+      // 失敗ダイアログ
+      await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('エラー'),
+          content: const Text('注文の処理に失敗しました。ネットワーク接続を確認して再度お試しください。'),
+          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
+        ),
+      );
     }
   }
 

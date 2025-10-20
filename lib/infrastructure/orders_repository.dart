@@ -15,11 +15,25 @@ abstract class IOrderRepository {
 
   /// 未提供の注文リストをストリームで取得する
   Stream<List<Order>> fetchOrdersStream();
+
+  /// 注文の状態を更新する
+  Future<void> updateOrderState(int id, String newState);
 }
 
 /// 注文データに関するデータアクセス層
 class OrderRepository implements IOrderRepository {
   final _client = Supabase.instance.client;
+
+  @override
+  Future<void> updateOrderState(int id, String newState) async {
+    try {
+      // newStateには 'calling' や 'completed' などの文字列が入る
+      await _client.from('orders').update({'has_provided': newState}).eq('id', id);
+    } catch (e) {
+      debugPrint('Error updating order state: $e');
+      rethrow;
+    }
+  }
 
   /// has_providedがfalseの注文リスト（関連アイテム付き）を一度だけ取得する内部メソッド
   Future<List<Order>> _fetchCurrentOrders() async {

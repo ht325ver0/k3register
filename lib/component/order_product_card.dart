@@ -176,8 +176,20 @@ class _OrderItemTile extends ConsumerWidget {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: product.taste != null && product.taste != Taste.none
-                ? Text(product.taste!.displayName)
-                : null,
+                // 味の表示をChipウィジェットに変更
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: Chip(
+                      label: Text(
+                        product.taste!.displayName,
+                        style: TextStyle(fontSize: 12, color: product.taste!.textColor),
+                      ),
+                      backgroundColor: product.taste!.backgroundColor,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  )
+                : null, // tasteがnoneの場合は何も表示しない
             trailing: Text(
               'x ${orderItem.quantity}',
               style: Theme.of(context).textTheme.headlineSmall,

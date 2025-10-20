@@ -27,7 +27,7 @@ class OrderRepository implements IOrderRepository {
     final response = await _client
         .from('orders')
         .select('*, order_items(*)')
-        .eq('has_provided', false)
+        .filter('has_provided', 'in', ['waiting', 'calling']) // 'in_' の代わりに 'filter' を使用
         .order('created_at', ascending: true);
 
     // 取得した生データを出力して確認

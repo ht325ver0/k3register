@@ -27,7 +27,7 @@ mixin _$Order {
   @JsonKey(name: 'total_price')
   int get totalPrice => throw _privateConstructorUsedError;
   @JsonKey(name: 'has_provided')
-  bool get hasProvided => throw _privateConstructorUsedError;
+  String get hasProvided => throw _privateConstructorUsedError;
 
   /// Serializes this Order to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,7 +47,7 @@ abstract class $OrderCopyWith<$Res> {
       {int? id,
       @JsonKey(name: 'order_items') List<OrderItem> items,
       @JsonKey(name: 'total_price') int totalPrice,
-      @JsonKey(name: 'has_provided') bool hasProvided});
+      @JsonKey(name: 'has_provided') String hasProvided});
 }
 
 /// @nodoc
@@ -86,7 +86,7 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
       hasProvided: null == hasProvided
           ? _value.hasProvided
           : hasProvided // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as String,
     ) as $Val);
   }
 }
@@ -102,7 +102,7 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
       {int? id,
       @JsonKey(name: 'order_items') List<OrderItem> items,
       @JsonKey(name: 'total_price') int totalPrice,
-      @JsonKey(name: 'has_provided') bool hasProvided});
+      @JsonKey(name: 'has_provided') String hasProvided});
 }
 
 /// @nodoc
@@ -139,7 +139,7 @@ class __$$OrderImplCopyWithImpl<$Res>
       hasProvided: null == hasProvided
           ? _value.hasProvided
           : hasProvided // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as String,
     ));
   }
 }
@@ -151,7 +151,7 @@ class _$OrderImpl implements _Order {
       {this.id,
       @JsonKey(name: 'order_items') required final List<OrderItem> items,
       @JsonKey(name: 'total_price') required this.totalPrice,
-      @JsonKey(name: 'has_provided') this.hasProvided = false})
+      @JsonKey(name: 'has_provided') this.hasProvided = 'waiting'})
       : _items = items;
 
   factory _$OrderImpl.fromJson(Map<String, dynamic> json) =>
@@ -174,7 +174,7 @@ class _$OrderImpl implements _Order {
   final int totalPrice;
   @override
   @JsonKey(name: 'has_provided')
-  final bool hasProvided;
+  final String hasProvided;
 
   @override
   String toString() {
@@ -220,7 +220,7 @@ abstract class _Order implements Order {
       {final int? id,
       @JsonKey(name: 'order_items') required final List<OrderItem> items,
       @JsonKey(name: 'total_price') required final int totalPrice,
-      @JsonKey(name: 'has_provided') final bool hasProvided}) = _$OrderImpl;
+      @JsonKey(name: 'has_provided') final String hasProvided}) = _$OrderImpl;
 
   factory _Order.fromJson(Map<String, dynamic> json) = _$OrderImpl.fromJson;
 
@@ -235,7 +235,7 @@ abstract class _Order implements Order {
   int get totalPrice;
   @override
   @JsonKey(name: 'has_provided')
-  bool get hasProvided;
+  String get hasProvided;
 
   /// Create a copy of Order
   /// with the given fields replaced by the non-null parameter values.

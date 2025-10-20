@@ -48,10 +48,9 @@ class _OrderCheckBody extends ConsumerWidget {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('エラー: $err')),
       data: (orders) {
-        // has_providedがfalseのものを「調理待ち」、trueのものを「呼び出し中」に振り分ける
-        // （現状はfalseのものしか来ないが、将来的な拡張のため）
-        final cookingOrders = orders.where((o) => !o.hasProvided).toList();
-        final callingOrders = orders.where((o) => o.hasProvided).toList();
+        // hasProvidedプロパティ（String型を想定）の値に基づいて注文を振り分ける
+        final cookingOrders = orders.where((o) => o.hasProvided == 'waiting').toList();
+        final callingOrders = orders.where((o) => o.hasProvided == 'calling').toList();
 
         // TabBarViewで各リストを表示
         return TabBarView(

@@ -11,7 +11,7 @@ class Order with _$Order {
     int? id,
     @JsonKey(name: 'order_items') required List<OrderItem> items,
     @JsonKey(name: 'total_price') required int totalPrice,
-    @Default(false) @JsonKey(name: 'has_provided') bool hasProvided,
+    @Default('waiting') @JsonKey(name: 'has_provided') String hasProvided,
   }) = _Order;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

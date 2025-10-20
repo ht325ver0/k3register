@@ -12,7 +12,7 @@ _$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
           .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
       totalPrice: (json['total_price'] as num).toInt(),
-      hasProvided: json['has_provided'] as bool? ?? false,
+      hasProvided: json['has_provided'] as String? ?? 'waiting',
     );
 
 Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>

@@ -7,14 +7,18 @@ part of 'order.dart';
 // **************************************************************************
 
 _$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
-      items: (json['items'] as List<dynamic>)
+      id: (json['id'] as num?)?.toInt(),
+      items: (json['order_items'] as List<dynamic>)
           .map((e) => OrderItem.fromJson(e as Map<String, dynamic>))
           .toList(),
-      totalPrice: (json['totalPrice'] as num).toInt(),
+      totalPrice: (json['total_price'] as num).toInt(),
+      hasProvided: json['has_provided'] as String? ?? 'waiting',
     );
 
 Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
     <String, dynamic>{
-      'items': instance.items,
-      'totalPrice': instance.totalPrice,
+      'id': instance.id,
+      'order_items': instance.items,
+      'total_price': instance.totalPrice,
+      'has_provided': instance.hasProvided,
     };

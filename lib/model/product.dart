@@ -5,10 +5,10 @@ part 'product.freezed.dart';
 part 'product.g.dart';
 
 enum Taste {
-  solt('塩', Color.fromARGB(223, 92, 239, 255)),
-  amakuchi('甘口', Color.fromARGB(225, 255, 224, 130)), // ! を追加
-  chukara('中辛', Color.fromARGB(225, 255, 183, 77)),
-  karakuchi('辛口', Color.fromARGB(225, 229, 115, 115)),
+  solt('塩', Color.fromARGB(225, 170, 216, 226)),
+  amakuchi('甘口', Color.fromARGB(225, 233, 210, 81)), // ! を追加
+  chukara('中辛', Color.fromARGB(225, 232, 143, 54)),
+  karakuchi('辛口', Color.fromARGB(225, 232, 121, 110)),
   death('デス', Colors.black),
   none('', Color.fromARGB(224, 255, 249, 232)); // tasteがない場合
 

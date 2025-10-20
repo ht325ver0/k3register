@@ -15,7 +15,9 @@ class OrderProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-      void changeOrderState(Order order){
+    final isWaiting = order.hasProvided == 'waiting';
+
+    void changeOrderState(Order order){
           // order.idがnullでないことを確認
       final orderId = order.id;
       if (orderId != null) {
@@ -49,7 +51,7 @@ class OrderProductCard extends ConsumerWidget {
                   }).toList();
 
                   // 注文の現在の状態に応じて、ダイアログのテキストを決定する
-                  final isWaiting = order.hasProvided == 'waiting';
+                  
                   final dialogTitle = isWaiting ? "呼び出し確認" : "完了確認";
                   final dialogQuestion = isWaiting
                       ? "この注文を「呼び出し中」にしますか？"
@@ -113,7 +115,7 @@ class OrderProductCard extends ConsumerWidget {
             // --- 上部：注文番号ヘッダー ---
             // こちらはCardの丸みに沿う
             Container(
-              color: Colors.blueGrey[50], // ヘッダーの背景色
+              color: (isWaiting ?Colors.blueGrey[50]: const Color.fromARGB(255, 255, 224, 224)) ,// ヘッダーの背景色
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
@@ -179,6 +181,7 @@ class _OrderItemTile extends ConsumerWidget {
                 // 味の表示をChipウィジェットに変更
                 ? Align(
                     alignment: Alignment.centerLeft,
+                    
                     child: Chip(
                       label: Text(
                         product.taste!.displayName,
@@ -187,6 +190,13 @@ class _OrderItemTile extends ConsumerWidget {
                       backgroundColor: product.taste!.backgroundColor,
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       visualDensity: VisualDensity.compact,
+                      // Chipに枠線を追加
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: const Color.fromARGB(255, 0, 0, 0), // 枠線の色
+                          width: 1.5, // 枠線の太さ
+                        ),
+                      ),
                     ),
                   )
                 : null, // tasteがnoneの場合は何も表示しない

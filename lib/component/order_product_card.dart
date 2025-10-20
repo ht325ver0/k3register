@@ -13,21 +13,18 @@ class OrderProductCard extends ConsumerWidget {
 
   const OrderProductCard({super.key, required this.order});
 
+  void _changeOrderState(WidgetRef ref, Order order) {
+    final orderId = order.id;
+    if (orderId != null) {
+      final newState = order.hasProvided == 'waiting' ? 'calling' : 'completed';
+      ref.read(orderRepositoryProvider).updateOrderState(orderId, newState);
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
     final isWaiting = order.hasProvided == 'waiting';
-
-    void changeOrderState(Order order){
-          // order.idがnullでないことを確認
-      final orderId = order.id;
-      if (orderId != null) {
-        // 現在の状態に応じて、次の状態を決定する
-        final newState = order.hasProvided == 'waiting' ? 'calling' : 'completed';
-        // Repositoryのメソッドを呼び出して状態を更新
-        ref.read(orderRepositoryProvider).updateOrderState(orderId, newState);
-      }
-    }
 
     return Card(
       // Card自体の角を丸くする
@@ -92,7 +89,7 @@ class OrderProductCard extends ConsumerWidget {
                           ElevatedButton(
                               child: const Text("OK"),
                               onPressed: () {
-                                changeOrderState(order);
+                                _changeOrderState(ref,order);
                                 Navigator.pop(context);
                               }),
                         ],
@@ -102,14 +99,7 @@ class OrderProductCard extends ConsumerWidget {
                 },
                 // 商品データ取得中はローディングを表示（通常は一瞬）
                 loading: () {
-                  // 簡易的なローディング表示
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => const Center(child: CircularProgressIndicator()),
-                  );
-                  // すぐにダイアログを閉じることで、フリーズしたように見えないようにする
-                  Future.delayed(const Duration(milliseconds: 500), () => Navigator.pop(context));
+                  debugPrint('商品情報をロード中です...');
                 },
                 // エラー時
                 error: (err, stack) => ScaffoldMessenger.of(context).showSnackBar(
@@ -129,7 +119,7 @@ class OrderProductCard extends ConsumerWidget {
                   const Text("注文番号", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   const SizedBox(width: 8),
                   Text(
-                    order.id.toString(),
+                    order.id?.toString() ?? 'N/A',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   const Spacer(),

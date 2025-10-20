@@ -5,6 +5,7 @@ import 'package:k3register/model/order_item.dart';
 import 'package:k3register/provider/product_provider.dart';
 import 'package:k3register/model/product.dart';
 import 'package:k3register/infrastructure/orders_repository.dart';
+import 'package:collection/collection.dart';
 
 /// 1つの注文内容全体を表示するカード
 class OrderProductCard extends ConsumerWidget {
@@ -42,7 +43,13 @@ class OrderProductCard extends ConsumerWidget {
                   // 注文商品リストから表示用のウィジェットリストを作成
                   final itemWidgets = order.items.map((orderItem) {
                     // 商品IDに一致する商品情報を探す
-                    final product = products.firstWhere((p) => p.id == orderItem.productId);
+                    // `firstWhere` は商品が見つからない場合に例外を投げるため、`collection` パッケージの `firstWhereOrNull` を使用して安全に処理します。
+                    // `collection` パッケージのインポートが必要になる場合があります: `import 'package:collection/collection.dart';`
+                    final product = products.firstWhereOrNull((p) => p.id == orderItem.productId);
+                    // 商品が見つからなかった場合の表示
+                    if (product == null) {
+                      return Text('・不明な商品 (ID: ${orderItem.productId}) x ${orderItem.quantity}', style: const TextStyle(color: Colors.red));
+                    }
                     final taste = product.taste != null && product.taste != Taste.none
                         ? ' (${product.taste!.displayName})'
                         : '';
@@ -158,7 +165,7 @@ class _OrderItemTile extends ConsumerWidget {
     final productsAsyncValue = ref.watch(productsProvider);
     return productsAsyncValue.when(
       data: (products) {
-        final product = products.firstWhere(
+        final product = products.firstWhereOrNull(
           (p) => p.id == orderItem.productId,
         );
 

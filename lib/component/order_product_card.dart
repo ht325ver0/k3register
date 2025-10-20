@@ -188,7 +188,7 @@ class _OrderItemTile extends ConsumerWidget {
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       visualDensity: VisualDensity.compact,
                       // Chipに枠線を追加
-                      shape: StadiumBorder(
+                      shape: const StadiumBorder(
                         side: BorderSide(
                           color: const Color.fromARGB(255, 0, 0, 0), // 枠線の色
                           width: 1.5, // 枠線の太さ

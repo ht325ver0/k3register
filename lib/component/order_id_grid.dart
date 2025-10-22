@@ -22,20 +22,25 @@ class OrderIdGrid extends ConsumerWidget {
           children: orders.map((order) { // ordersリストをマップしてGridTileを生成
             // order.idがnullでないことを確認
             if (order.id == null) return const SizedBox.shrink();
+            final isHighlighted = highlightedIds.contains(order.id);
             return AnimatedContainer( // AnimatedContainerを使用
               duration: const Duration(milliseconds: 500), // アニメーション時間
               curve: Curves.easeInOut, // アニメーションカーブ
               padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: highlightedIds.contains(order.id)
-                    ? Colors.yellow[600] // ハイライト色
-                    : (order.hasProvided == 'waiting' ? Colors.blue : Colors.orange), // 通常色
+                color: isHighlighted
+                    ? Colors.limeAccent // ハイライト色（非常に明るい）
+                    : (order.hasProvided == 'waiting' ? Colors.blue.shade700 : Colors.deepOrange), // 通常色
                 borderRadius: BorderRadius.circular(8.0), // 角を丸くする
               ),
               child: Text( // 注文IDを表示
                 '${order.id}',
-                style: const TextStyle(color: Colors.white, fontSize: 60, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: isHighlighted ? Colors.black87 : Colors.white, // ハイライト時は黒文字、通常は白文字
+                  fontSize: 170,
+                  fontWeight: FontWeight.bold
+                ),
               )
             );
           }).toList(), // Mapの結果をListに変換

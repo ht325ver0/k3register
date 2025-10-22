@@ -7,17 +7,19 @@ import 'package:k3register/model/product.dart';
 
 
 class OrderIdGrid extends ConsumerWidget {
-  const OrderIdGrid({super.key, });
+  final int column;
+
+  const OrderIdGrid({super.key, required this.column});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
     return Expanded(
       child: GridView.count(
-          crossAxisCount: 3, // 1行に表示する数
+          crossAxisCount: column, // 1行に表示する数
           crossAxisSpacing: 4.0, // 縦スペース
           mainAxisSpacing: 4.0, // 横スペース
-          children: List.generate(100, (index) {
+          children: List.generate(120, (index) {
             return Container(
               padding: const EdgeInsets.all(8.0),
               alignment: Alignment.center,
@@ -25,10 +27,10 @@ class OrderIdGrid extends ConsumerWidget {
                 color: Colors.green,
               ),
               child:GridTile(
-                child: Icon(Icons.map),
-                footer: Center(
+                child: Center(
                   child: Text(
-                    'Meeage $index',
+                    '$index',
+                    style: const TextStyle(color: Colors.white, fontSize: 60),
                   ),
                 )
               )

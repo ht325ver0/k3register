@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k3register/component/order_list.dart';
 import 'package:k3register/infrastructure/orders_repository.dart';
 import 'package:k3register/model/order.dart';
 import 'package:k3register/component/order_id_grid.dart';
@@ -69,7 +67,7 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
         return Scaffold(
           // AppBarのスタイルを調整
           appBar: AppBar(
-            title: const Text('オーダーディスプレイ'),
+            title: const Text(''),
             backgroundColor: Colors.white, // AppBarの背景色を白に
             foregroundColor: Colors.black87, // AppBarの文字やアイコンの色を黒に
             elevation: 1, // AppBarに薄い影をつける

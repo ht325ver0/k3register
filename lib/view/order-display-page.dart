@@ -67,7 +67,7 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
         return Scaffold(
           // AppBarのスタイルを調整
           appBar: AppBar(
-            title: const Text(''),
+            title: const Text('オーダーディスプレイ'),
             backgroundColor: Colors.white, // AppBarの背景色を白に
             foregroundColor: Colors.black87, // AppBarの文字やアイコンの色を黒に
             elevation: 1, // AppBarに薄い影をつける
@@ -82,7 +82,7 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
                   // 左側のカラムの比率を2に設定
                   children: [
                     // テキストの色を白に変更
-                    const Text("調理中", style: TextStyle(fontSize: 50, color: Colors.black87)),
+                    const Text("調理中", style: TextStyle(fontSize: 60, color: Colors.black87)),
                     // cookingOrdersをOrderIdGridに渡す
                     OrderIdGrid(column: 5, orders: cookingOrders),
                   ],
@@ -95,7 +95,7 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
             child: Column( // 右側のカラムの比率を1に設定
               children: [
                 // テキストの色を白に変更
-                const Text("お渡し待ち", style: TextStyle(fontSize: 50, color: Colors.black87)), // ref: を削除
+                const Text("お渡し待ち", style: TextStyle(fontSize: 60, color: Colors.black87)), // ref: を削除
                 // callingOrdersとhighlightedIdsをOrderIdGridに渡す
                 OrderIdGrid(column: 2, orders: callingOrders, highlightedIds: _highlightedIds),
               ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:k3register/model/cart_product.dart';
-import 'package:k3register/view/accounting_page.dart';
 
 class TotalCounter extends StatelessWidget {
   // 1. 単一のCartProductではなく、List<CartProduct>を受け取るように変更
@@ -26,8 +25,8 @@ class TotalCounter extends StatelessWidget {
     final int finalPrice = regularPrice - discountAmount;
 
     // スタイルを定義しておくと、一貫性のあるUIを保ちやすくなります。
-    final labelStyle = Theme.of(context).textTheme.titleMedium;
-    final valueStyle = Theme.of(context).textTheme.titleMedium;
+    final labelStyle = Theme.of(context).textTheme.headlineSmall; // フォントサイズを大きく
+    final valueStyle = Theme.of(context).textTheme.headlineSmall; // フォントサイズを大きく
 
     return Material(
       elevation: 8.0, // カートリストとの区別を明確にするための影
@@ -64,25 +63,21 @@ class TotalCounter extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("合計金額",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith( // フォントサイズを大きく
                         fontWeight: FontWeight.bold)),
                 Text("¥$finalPrice",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith( // フォントサイズを大きく
                         fontWeight: FontWeight.bold)),
               ],
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const AccountingPage()
-                  ),
-                );
+                // TODO: 会計処理のダイアログなどを表示
               },
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16)),
-                  child: const Text("お会計", style: TextStyle(fontSize: 18)),
+                  padding: const EdgeInsets.symmetric(vertical: 20)), // ボタンを縦に大きく
+              child: const Text("お会計", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)), // 文字を大きく太く
             ),
           ],
         ),

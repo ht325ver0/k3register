@@ -40,7 +40,7 @@ class ProductGridButton extends ConsumerWidget {
                 children: [
                   // 部位名のヘッダー
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 1.0),
                     child: Text(
                       partName,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -50,12 +50,12 @@ class ProductGridButton extends ConsumerWidget {
                   GridView.builder(
                     shrinkWrap: true, // ListViewの中で使うため必須
                     physics: const NeverScrollableScrollPhysics(), // ListViewのスクロールと競合しないように
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 15.0),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 5, // 画面に合わせて調整
+                      crossAxisCount: 5, // 1行に表示するカードの数を4に変更
                       mainAxisSpacing: 8.0,
                       crossAxisSpacing: 8.0,
-                      childAspectRatio: 0.8,
+                      childAspectRatio: 0.7, // カードの縦横比を調整
                     ),
                     itemCount: productsByPart.length,
                     itemBuilder: (context, gridIndex) {

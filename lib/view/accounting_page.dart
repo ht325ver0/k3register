@@ -136,11 +136,11 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
-                children: [
-                  Text('合計: ¥$totalAmount', style: Theme.of(context).textTheme.headlineSmall),
+                children: [ // 金額表示のフォントサイズを大きく
+                  Text('合計: ¥$totalAmount', style: Theme.of(context).textTheme.headlineMedium),
                   const Divider(height: 32),
-                  Text('お預かり: ¥$receivedAmount', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.blue)),
-                  Text('お釣り: ¥${change > 0 ? change : 0}', style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: Colors.green)),
+                  Text('お預かり: ¥$receivedAmount', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.blue)),
+                  Text('お釣り: ¥${change > 0 ? change : 0}', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.green)),
                   const Spacer(),
                   Keypad(onKeyPressed: (value) => onKeyPressed(value, totalAmount)),
                 ],

@@ -6,12 +6,14 @@ class TotalCounter extends StatelessWidget {
   final List<CartProduct> cartProducts;
   final int discountMoney;
   final int discountRatio;
+  final VoidCallback onCheckout;
 
   const TotalCounter(
       {super.key,
       required this.cartProducts,
       required this.discountMoney,
-      required this.discountRatio});
+      required this.discountRatio,
+      required this.onCheckout});
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +74,10 @@ class TotalCounter extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () {
-                // TODO: 会計処理のダイアログなどを表示
-              },
+              onPressed: onCheckout,
               style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 20)), // ボタンを縦に大きく
-              child: const Text("お会計", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)), // 文字を大きく太く
+                  padding: const EdgeInsets.symmetric(vertical: 20)), 
+              child: const Text("お会計", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
             ),
           ],
         ),

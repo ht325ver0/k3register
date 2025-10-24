@@ -5,6 +5,7 @@ import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/component/total_counter.dart';
 import 'package:k3register/provider/cart_provider.dart';
 import 'package:k3register/provider/product_provider.dart';
+import 'package:k3register/view/accounting_page.dart';
 
 
 class CashRegisterPage extends ConsumerWidget {
@@ -39,7 +40,30 @@ class CashRegisterPage extends ConsumerWidget {
               TotalCounter(
                   cartProducts: cartProducts,
                   discountMoney: mockDiscountMoney,
-                  discountRatio: mockDiscountRatio)
+                  discountRatio: mockDiscountRatio,
+                  onCheckout: () {
+                    if(cartProducts.length == 0){
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text("警告"),
+                            content: Text("商品がカートに入っていません"),
+                            actions: [
+                              TextButton(
+                                child: Text("OK"),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }else{
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const AccountingPage(),
+                      ));
+                    }
+                  })
             ]),
           ),
         ],

@@ -22,6 +22,9 @@ class CashRegisterPage extends ConsumerWidget {
 
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('レジ画面'),
+      ),
       body: Row(
         children: [
           ProductGridButton(products: cartProductsAsync),

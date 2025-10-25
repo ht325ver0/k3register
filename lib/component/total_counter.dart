@@ -40,8 +40,8 @@ class TotalCounter extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("商品点数", style: labelStyle),
-                Text("$totalQuantity 点", style: valueStyle),
+                Text("合計本数", style: labelStyle),
+                Text("$totalQuantity 本", style: valueStyle),
               ],
             ),
             const SizedBox(height: 8),

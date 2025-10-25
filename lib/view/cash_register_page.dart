@@ -42,16 +42,16 @@ class CashRegisterPage extends ConsumerWidget {
                   discountMoney: mockDiscountMoney,
                   discountRatio: mockDiscountRatio,
                   onCheckout: () {
-                    if(cartProducts.length == 0){
+                    if(cartProducts.isEmpty){
                       showDialog(
                         context: context,
                         builder: (context) {
                           return AlertDialog(
-                            title: Text("警告"),
-                            content: Text("商品がカートに入っていません"),
+                            title: const Text("警告"),
+                            content: const Text("商品がカートに入っていません"),
                             actions: [
                               TextButton(
-                                child: Text("OK"),
+                                child: const Text("OK"),
                                 onPressed: () => Navigator.pop(context),
                               ),
                             ],

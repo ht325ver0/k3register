@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:k3register/component/amount_card.dart';
 import 'package:k3register/component/cart_list.dart';
 import 'package:k3register/provider/cart_provider.dart';
 import 'package:k3register/component/keypad.dart';
@@ -132,16 +133,17 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
           ),
           // 右側: キーパッドと金額表示
           Expanded(
-            flex: 3,
+            flex: 4,
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [ // 金額表示のフォントサイズを大きく
-                  Text('合計: ¥$totalAmount', style: Theme.of(context).textTheme.headlineMedium),
-                  const Divider(height: 32),
-                  Text('お預かり: ¥$receivedAmount', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.blue)),
-                  Text('お釣り: ¥${change > 0 ? change : 0}', style: Theme.of(context).textTheme.headlineLarge?.copyWith(color: Colors.green)),
-                  const Spacer(),
+                  AmountCard(amount: totalAmount, title: '合計金額', color: Colors.white),
+                  const Divider(height: 10),
+                  // お預かり金額カード
+                  AmountCard(amount: receivedAmount, title: 'お預かり', color: Colors.blue[50] ?? Colors.blue.shade50),
+                  AmountCard(amount: change, title: 'お釣り', color: Colors.green[50] ?? Colors.green.shade50),
+                  const Spacer(flex: 3),
                   Keypad(onKeyPressed: (value) => onKeyPressed(value, totalAmount)),
                 ],
               ),

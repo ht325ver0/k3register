@@ -34,7 +34,11 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
       } else if (value == 'ピッタリ') {
         _displayValue = totalAmount.toString();
       } else if (shortcuts.contains(value)) {
-        _displayValue = value;
+        // ショートカットキーが押された場合、現在の値に加算する
+        final currentAmount = int.tryParse(_displayValue) ?? 0;
+        final shortcutAmount = int.tryParse(value) ?? 0;
+        final newAmount = currentAmount + shortcutAmount;
+        _displayValue = newAmount.toString();
       } else {
         if (_displayValue.length < 9) {
           _displayValue += value;

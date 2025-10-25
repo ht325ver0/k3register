@@ -71,7 +71,7 @@ class Keypad extends StatelessWidget {
               label: key,
               onTap: () => onKeyPressed(key),
               backgroundColor: _getShortcutButtonColor(key),
-              textColor: Colors.black87,
+              textColor: Colors.white,
             );
           },
         ),
@@ -93,7 +93,7 @@ class Keypad extends StatelessWidget {
       case 'C':
         return Colors.redAccent;
       case 'ピッタリ':
-        return Colors.orangeAccent;
+        return const Color.fromARGB(255, 255, 151, 15);
       default:
         return Colors.blue;
     }

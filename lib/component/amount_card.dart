@@ -2,12 +2,10 @@
 
 import 'package:flutter/material.dart';
 
-class AmountCard extends StatefulWidget{
+class AmountCard extends StatelessWidget{
   final int amount;
   final String title;
   final Color? color;
-
-
 
   const AmountCard({
     super.key,
@@ -17,15 +15,6 @@ class AmountCard extends StatefulWidget{
   });
 
   @override
-  State<AmountCard> createState() => _AmountCardState();
-}
-
-class _AmountCardState extends State<AmountCard> {
-  
-  int _amount() => widget.amount;
-
-
-  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4.0, // 少し影を強調
@@ -33,24 +22,24 @@ class _AmountCardState extends State<AmountCard> {
         borderRadius: BorderRadius.circular(12.0), // 角を丸く
         side: BorderSide(color: Colors.blueGrey.shade200, width: 1.0), // 枠線を追加
       ),
-      color: widget.color ?? Colors.white, // nullなら白をデフォルトとして使用
+      color: color ?? Colors.white, // nullなら白をデフォルトとして使用
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0), // 内部パディング
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween, // 左右に配置
           children: [
             Text(
-              widget.title,
+              title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.normal, // ラベルは通常ウェイト
                 color: Colors.black87,
               ),
             ),
             Text(
-              '¥${widget.amount}',
+              '¥$amount',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith( // より大きく
                 fontWeight: FontWeight.bold, // 太字
-                color: widget.amount < 0 ? Colors.red : Theme.of(context).primaryColor, 
+                color: amount < 0 ? Colors.red : Theme.of(context).primaryColor, 
               ),
             ),
           ],

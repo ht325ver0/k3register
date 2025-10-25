@@ -12,18 +12,6 @@ class AutoClosingSuccessDialog extends StatefulWidget {
 
 class _AutoClosingSuccessDialogState extends State<AutoClosingSuccessDialog> {
   @override
-  void initState() {
-    super.initState();
-    // 2秒後にダイアログを閉じる
-    Future.delayed(const Duration(seconds: 2), () {
-      // ウィジェットがまだ画面に存在する場合のみpopを実行
-      if (mounted) {
-        Navigator.of(context).pop();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     // AlertDialogのコンテンツをSizedBoxで囲み、サイズを指定する
     return AlertDialog(
@@ -46,9 +34,21 @@ class _AutoClosingSuccessDialogState extends State<AutoClosingSuccessDialog> {
             // 受け取った注文IDを表示する
             Text(widget.orderId.toString(), style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
+            const Text('この番号の番号札を渡してください', style: TextStyle(color: Colors.grey))
+            
           ],
         ),
       ),
+      actions: [
+        ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('OK'),
+          ),
+      ],
     );
   }
 }

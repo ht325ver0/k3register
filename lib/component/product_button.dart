@@ -44,39 +44,44 @@ class ProductCard extends StatelessWidget {
                 child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start, // テキストを左揃えに
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 部位（商品名）の表示
-                    Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      overflow: TextOverflow.ellipsis, // 文字がはみ出た場合に...で省略
-                    ),
-                    const SizedBox(height: 4), // 少し隙間を空ける
-
-                    product.taste != null
-                        ? Chip(
-                            label: Text(
-                              product.taste!.displayName,
-                              style: TextStyle(fontSize: 12, color: product.taste!.textColor),
+                    // 商品名と味の表示エリア。Flexibleにして必要な高さだけ使うようにする
+                    Flexible(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min, // Columnが必要な高さだけを占めるようにする
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 商品名が長すぎる場合に改行されるようにする
+                          Text(
+                            product.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                            maxLines: 2, // 最大2行まで表示
+                            overflow: TextOverflow.ellipsis, // はみ出す場合は...で省略
+                          ),
+                          if (product.taste != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Chip(
+                                label: Text(
+                                  product.taste!.displayName,
+                                  style: TextStyle(fontSize: 12, color: product.taste!.textColor),
+                                ),
+                                backgroundColor: product.taste!.backgroundColor,
+                                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                                labelPadding: EdgeInsets.zero,
+                                visualDensity: VisualDensity.compact,
+                              ),
                             ),
-                            backgroundColor: product.taste!.backgroundColor,
-                            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
-                            labelPadding: EdgeInsets.zero,
-                            visualDensity: VisualDensity.compact,
-                          )
-                        : const SizedBox.shrink(),
-                    const Spacer(), 
-
-          
+                        ],
+                      ),
+                    ),
+                    // 価格表示。常に一番下に表示される
                     Text(
                       '¥${product.price}',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 18, // 価格を大きく
                         color: Color.fromARGB(255, 118, 77, 77),
                       ),
                     ),

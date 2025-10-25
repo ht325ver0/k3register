@@ -17,7 +17,7 @@ class CartCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     return SizedBox(
-      height: 100, // カードの高さを適切な値に調整
+      height: 140, // カードの高さを少し大きく
       child: Card(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           clipBehavior: Clip.antiAlias, // 子ウィジェットがカードの角をはみ出さないように設定
@@ -36,7 +36,7 @@ class CartCard extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(cartProduct.product.name,
-                        style: const TextStyle(fontSize: 16)),
+                        style: const TextStyle(fontSize: 28)), // 商品名を大きく
                     if (cartProduct.product.taste != null &&
                         cartProduct.product.taste != Taste.none)
                       Padding(
@@ -45,7 +45,7 @@ class CartCard extends ConsumerWidget {
                           label: Text(
                             cartProduct.product.taste!.displayName,
                             style: TextStyle(
-                                fontSize: 10,
+                                fontSize: 18, // 味の表示を大きく
                                 color: cartProduct.product.taste!.textColor),
                           ),
                           backgroundColor:
@@ -60,6 +60,7 @@ class CartCard extends ConsumerWidget {
                 IconButton(
                   icon: const Icon(Icons.remove),
                   color: Colors.blue,
+                  iconSize: 44, // アイコンを大きく
                   onPressed: () {
                     ref.read(cartProvider.notifier).decrement(cartProduct);
                   },
@@ -67,15 +68,16 @@ class CartCard extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.grey[400], // colorをdecorationの中に移動
+                    color: const Color.fromARGB(255, 233, 233, 233), // colorをdecorationの中に移動
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text('${cartProduct.quantity}',
-                      style: const TextStyle(fontSize: 16)),
+                      style: const TextStyle(fontSize: 32)), // 数量を大きく
                 ),
                 // 数量を増やすボタン
                 IconButton(
                   icon: const Icon(Icons.add),
+                  iconSize: 44, // アイコンを大きく
                   color: Colors.pink,
                   // onPressedに空の関数を設定してボタンを有効化
                   onPressed: () {

@@ -15,7 +15,7 @@ class Keypad extends StatelessWidget {
         Expanded(flex: 3, child: _buildNumberKeypad()),
         const SizedBox(width: 10),
         // 右側: 金額ショートカットキー
-        Expanded(flex: 1, child: _buildShortcutKeypad()),
+        Expanded(flex: 2, child: _buildShortcutKeypad()),
       ],
     );
   }
@@ -33,7 +33,7 @@ class Keypad extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        mainAxisSpacing: 10.0,
+        mainAxisSpacing: 5.0,
         crossAxisSpacing: 10.0,
         childAspectRatio: 1.5,
       ),
@@ -52,24 +52,36 @@ class Keypad extends StatelessWidget {
 
   /// 金額ショートカットキー部分を構築する
   Widget _buildShortcutKeypad() {
-    const shortcuts = ['C', '1000', '500', '100', '50', 'ピッタリ', 'OK'];
-    return Column(
-      children: shortcuts.map((key) {
-        return SizedBox(
-          height: 60, // ボタンの高さを固定値で指定
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: SizedBox.expand( // 親のサイズいっぱいに広がる
-              child: _KeypadButton(
-                label: key,
-                onTap: () => onKeyPressed(key),
-                backgroundColor: _getShortcutButtonColor(key),
-                textColor: Colors.white,
-              ),
-            ),
+    const shortcuts = ['C', 'ピッタリ', '1000', '500', '100', '50'];
+    return Column (
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 5.0,
+            crossAxisSpacing: 10.0,
+            childAspectRatio: 1.5,
           ),
-        );
-      }).toList(),
+          itemCount: shortcuts.length,
+          itemBuilder: (context, index) {
+            final key = shortcuts[index];
+            return _KeypadButton(
+              label: key,
+              onTap: () => onKeyPressed(key),
+              backgroundColor: _getShortcutButtonColor(key),
+              textColor: Colors.white,
+            );
+          },
+        ),
+        _KeypadButton( // isLargeフラグを追加して縦長のボタンにする
+          label: 'OK',
+          onTap: () => onKeyPressed('OK'),
+          backgroundColor: _getShortcutButtonColor('OK'),
+          textColor: Colors.white,
+        ),
+      ],
     );
   }
 
@@ -81,7 +93,7 @@ class Keypad extends StatelessWidget {
       case 'C':
         return Colors.redAccent;
       case 'ピッタリ':
-        return Colors.orange;
+        return const Color.fromARGB(255, 255, 151, 15);
       default:
         return Colors.blue;
     }
@@ -94,14 +106,12 @@ class _KeypadButton extends StatelessWidget {
   final VoidCallback onTap;
   final Color? backgroundColor;
   final Color? textColor;
-  final bool isLarge;
 
   const _KeypadButton({
     required this.label,
     required this.onTap,
     this.backgroundColor,
     this.textColor,
-    this.isLarge = false,
   });
 
   @override
@@ -109,11 +119,13 @@ class _KeypadButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(50), // ボタンの最小高さを設定
-        backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surface,
-        foregroundColor: textColor ?? Theme.of(context).colorScheme.onSurface,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: EdgeInsets.zero,
+        minimumSize: Size.fromHeight(100), // isLargeに応じて高さを変更
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).colorScheme.surface,
+        foregroundColor:
+            textColor ?? Theme.of(context).colorScheme.onSurface,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12)),
       ).copyWith(
         // 影を調整してフラットなデザインに近づける
         elevation: MaterialStateProperty.all(2.0),
@@ -121,7 +133,7 @@ class _KeypadButton extends StatelessWidget {
       child: Text(
         label,
         style: const TextStyle(
-          fontSize: 24,
+          fontSize: 22,
           fontWeight: FontWeight.bold,
         ),
       ),

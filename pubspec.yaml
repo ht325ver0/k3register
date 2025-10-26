@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_riverpod: ^2.6.1
   supabase_flutter: ^2.10.3
+  auto_size_text: ^3.0.0
   flutter_dotenv: ^6.0.0
   firebase_core: ^4.2.0
 

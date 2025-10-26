@@ -1,0 +1,55 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "k3register",
+          "appId": "1:609371154170:android:478709a28cdb4003a3cb43",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "k3register",
+          "appId": "1:609371154170:ios:e3d7fd07443eb4d9a3cb43",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "k3register",
+          "appId": "1:609371154170:ios:e3d7fd07443eb4d9a3cb43",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "k3register",
+          "configurations": {
+            "android": "1:609371154170:android:478709a28cdb4003a3cb43",
+            "ios": "1:609371154170:ios:e3d7fd07443eb4d9a3cb43",
+            "macos": "1:609371154170:ios:e3d7fd07443eb4d9a3cb43",
+            "web": "1:609371154170:web:f6b72a29796089c1a3cb43",
+            "windows": "1:609371154170:web:2d173e28c91e08bfa3cb43"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

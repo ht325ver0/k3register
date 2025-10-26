@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "609371154170",
+    "project_id": "k3register",
+    "storage_bucket": "k3register.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609371154170:android:478709a28cdb4003a3cb43",
+        "android_client_info": {
+          "package_name": "com.example.k3register"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuKrL4iAhHzlChCOMlJplc_SV2wHvVehA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

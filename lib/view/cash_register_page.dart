@@ -11,8 +11,8 @@ import 'package:k3register/view/accounting_page.dart';
 class CashRegisterPage extends ConsumerWidget {
   const CashRegisterPage({super.key});
 
-  static const int mockDiscountMoney = 50;
-  static const int mockDiscountRatio = 3;
+  static const int mockDiscountMoney = 0;
+  static const int mockDiscountRatio = 0;
 
 
   @override

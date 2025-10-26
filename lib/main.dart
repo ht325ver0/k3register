@@ -13,6 +13,12 @@ Future<void> main() async {
   await dotenv.load(fileName: ".env");
 
   WidgetsFlutterBinding.ensureInitialized(); // Flutterの初期化を確認
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL'] ??
         (throw ArgumentError(
@@ -22,9 +28,6 @@ Future<void> main() async {
             'SUPABASE_ANON_KEY is not set in .env file. Please create .env file and add SUPABASE_ANON_KEY.')),
   );
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(const ProviderScope(child: MyApp()));
 }
 

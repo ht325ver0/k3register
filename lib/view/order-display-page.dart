@@ -84,20 +84,20 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
                     // テキストの色を白に変更
                     const Text("調理中", style: TextStyle(fontSize: 60, color: Colors.black87)),
                     // cookingOrdersをOrderIdGridに渡す
-                    OrderIdGrid(column: 5, orders: cookingOrders),
+                    OrderIdGrid(column: 4, orders: cookingOrders),
                   ],
                 ),
               ),
           Spacer(flex: 1),
           // 右側のカラムをExpandedで囲む
           Expanded(
-            flex: 10,
+            flex: 8,
             child: Column( // 右側のカラムの比率を1に設定
               children: [
                 // テキストの色を白に変更
                 const Text("お渡し待ち", style: TextStyle(fontSize: 60, color: Colors.black87)), // ref: を削除
                 // callingOrdersとhighlightedIdsをOrderIdGridに渡す
-                OrderIdGrid(column: 2, orders: callingOrders, highlightedIds: _highlightedIds),
+                OrderIdGrid(column: 1, orders: callingOrders, highlightedIds: _highlightedIds, aspect: 2),
               ],
             ),
           ),

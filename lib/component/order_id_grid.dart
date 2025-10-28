@@ -8,8 +8,9 @@ class OrderIdGrid extends ConsumerWidget {
   final int column;
   final List<Order> orders; // 注文リストを受け取る
   final Set<int> highlightedIds; // ハイライト対象のIDセット
+  final double aspect;
 
-  const OrderIdGrid({super.key, required this.column, required this.orders, this.highlightedIds = const {}});
+  const OrderIdGrid({super.key, required this.column, required this.orders, this.highlightedIds = const {}, this.aspect = 1});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,6 +20,7 @@ class OrderIdGrid extends ConsumerWidget {
           crossAxisCount: column, // 1行に表示する数 (指定されたcolumnを使用)
           crossAxisSpacing: 4.0, // グリッドアイテム間の横スペース
           mainAxisSpacing: 4.0, // グリッドアイテム間の縦スペース
+          childAspectRatio: aspect, // アイテムの縦横比を調整（例：少し縦長に）
           children: orders.map((order) { // ordersリストをマップしてGridTileを生成
             // order.idがnullでないことを確認
             if (order.id == null) return const SizedBox.shrink();
@@ -38,7 +40,7 @@ class OrderIdGrid extends ConsumerWidget {
                 '${order.id}',
                 style: TextStyle(
                   color: isHighlighted ? Colors.black87 : Colors.white, // ハイライト時は黒文字、通常は白文字
-                  fontSize: 180,
+                  fontSize: 120,
                   fontWeight: FontWeight.bold
                 ),
               )

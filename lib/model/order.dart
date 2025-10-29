@@ -13,7 +13,6 @@ class Order with _$Order {
     @JsonKey(name: 'total_price') required int totalPrice,
     @Default('waiting') @JsonKey(name: 'has_provided') String hasProvided,
     @JsonKey(name: 'created_at') DateTime? createdAt,
-    DateTime? updatedAt,
   }) = _Order;
 
   factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);

@@ -30,7 +30,6 @@ mixin _$Order {
   String get hasProvided => throw _privateConstructorUsedError;
   @JsonKey(name: 'created_at')
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Order to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,8 +50,7 @@ abstract class $OrderCopyWith<$Res> {
       @JsonKey(name: 'order_items') List<OrderItem> items,
       @JsonKey(name: 'total_price') int totalPrice,
       @JsonKey(name: 'has_provided') String hasProvided,
-      @JsonKey(name: 'created_at') DateTime? createdAt,
-      DateTime? updatedAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 }
 
 /// @nodoc
@@ -75,7 +73,6 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
     Object? totalPrice = null,
     Object? hasProvided = null,
     Object? createdAt = freezed,
-    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -98,10 +95,6 @@ class _$OrderCopyWithImpl<$Res, $Val extends Order>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ) as $Val);
   }
 }
@@ -118,8 +111,7 @@ abstract class _$$OrderImplCopyWith<$Res> implements $OrderCopyWith<$Res> {
       @JsonKey(name: 'order_items') List<OrderItem> items,
       @JsonKey(name: 'total_price') int totalPrice,
       @JsonKey(name: 'has_provided') String hasProvided,
-      @JsonKey(name: 'created_at') DateTime? createdAt,
-      DateTime? updatedAt});
+      @JsonKey(name: 'created_at') DateTime? createdAt});
 }
 
 /// @nodoc
@@ -140,7 +132,6 @@ class __$$OrderImplCopyWithImpl<$Res>
     Object? totalPrice = null,
     Object? hasProvided = null,
     Object? createdAt = freezed,
-    Object? updatedAt = freezed,
   }) {
     return _then(_$OrderImpl(
       id: freezed == id
@@ -163,10 +154,6 @@ class __$$OrderImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      updatedAt: freezed == updatedAt
-          ? _value.updatedAt
-          : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime?,
     ));
   }
 }
@@ -179,8 +166,7 @@ class _$OrderImpl implements _Order {
       @JsonKey(name: 'order_items') required final List<OrderItem> items,
       @JsonKey(name: 'total_price') required this.totalPrice,
       @JsonKey(name: 'has_provided') this.hasProvided = 'waiting',
-      @JsonKey(name: 'created_at') this.createdAt,
-      this.updatedAt})
+      @JsonKey(name: 'created_at') this.createdAt})
       : _items = items;
 
   factory _$OrderImpl.fromJson(Map<String, dynamic> json) =>
@@ -207,12 +193,10 @@ class _$OrderImpl implements _Order {
   @override
   @JsonKey(name: 'created_at')
   final DateTime? createdAt;
-  @override
-  final DateTime? updatedAt;
 
   @override
   String toString() {
-    return 'Order(id: $id, items: $items, totalPrice: $totalPrice, hasProvided: $hasProvided, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Order(id: $id, items: $items, totalPrice: $totalPrice, hasProvided: $hasProvided, createdAt: $createdAt)';
   }
 
   @override
@@ -227,9 +211,7 @@ class _$OrderImpl implements _Order {
             (identical(other.hasProvided, hasProvided) ||
                 other.hasProvided == hasProvided) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.createdAt == createdAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -240,8 +222,7 @@ class _$OrderImpl implements _Order {
       const DeepCollectionEquality().hash(_items),
       totalPrice,
       hasProvided,
-      createdAt,
-      updatedAt);
+      createdAt);
 
   /// Create a copy of Order
   /// with the given fields replaced by the non-null parameter values.
@@ -265,8 +246,7 @@ abstract class _Order implements Order {
       @JsonKey(name: 'order_items') required final List<OrderItem> items,
       @JsonKey(name: 'total_price') required final int totalPrice,
       @JsonKey(name: 'has_provided') final String hasProvided,
-      @JsonKey(name: 'created_at') final DateTime? createdAt,
-      final DateTime? updatedAt}) = _$OrderImpl;
+      @JsonKey(name: 'created_at') final DateTime? createdAt}) = _$OrderImpl;
 
   factory _Order.fromJson(Map<String, dynamic> json) = _$OrderImpl.fromJson;
 
@@ -285,8 +265,6 @@ abstract class _Order implements Order {
   @override
   @JsonKey(name: 'created_at')
   DateTime? get createdAt;
-  @override
-  DateTime? get updatedAt;
 
   /// Create a copy of Order
   /// with the given fields replaced by the non-null parameter values.

@@ -24,17 +24,13 @@ class CookingCounter extends ConsumerWidget {
       error: (err, stack) => Center(child: Text('商品情報の取得に失敗しました: $err')),
       data: (products) {
         // 部位ごとの本数を集計するMap
+        final productMap = {for (var p in products) p.id: p};
+
         final Map<String, int> partCounts = {};
-
-        // 全ての注文をループ
         for (final order in orders) {
-          // 注文内の各商品をループ
           for (final item in order.items) {
-            // 商品IDに対応する商品情報を探す
-            final product = products.firstWhereOrNull((p) => p.id == item.productId);
-
+            final product = productMap[item.productId];
             if (product != null) {
-              // 商品名（部位）をキーとして数量を加算
               partCounts.update(
                 product.name,
                 (value) => value + item.quantity,

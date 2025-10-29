@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:k3register/component/order_list.dart';
 import 'package:k3register/infrastructure/orders_repository.dart';
 import 'package:k3register/model/order.dart';
+import 'package:k3register/component/order_id_grid.dart';
+import 'package:k3register/component/cooking_counter.dart';
+
 
 class OrderCheckPage extends StatefulWidget {
   const OrderCheckPage({super.key});
@@ -19,7 +22,7 @@ class _OrderCheckPageState extends State<OrderCheckPage> {
   Widget build(BuildContext context) {
     // このページ全体をDefaultTabControllerで囲む
     return DefaultTabController(
-      length: 2, // タブの数
+      length: 3, // タブの数
       child: Scaffold(
         appBar: AppBar(
           title: const Text('注文確認'),
@@ -30,6 +33,7 @@ class _OrderCheckPageState extends State<OrderCheckPage> {
             unselectedLabelStyle: const TextStyle(fontSize: 16), // 未選択のタブのスタイル
             indicatorWeight: 3.0, // インジケーター（下線）の太さ
             tabs: const <Widget>[
+              Tab(text: '焼き待ち本数'),
               Tab(text: '調理待ち'),
               Tab(text: '呼び出し中'),
             ],
@@ -60,6 +64,7 @@ class _OrderCheckBody extends ConsumerWidget {
         // TabBarViewで各リストを表示
         return TabBarView(
           children: [
+            CookingCounter(orders: cookingOrders),
             OrderList(orders: cookingOrders),
             OrderList(orders: callingOrders),
           ],

@@ -53,10 +53,14 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
     if (createdAt != null) {
       final difference = DateTime.now().difference(createdAt);
       setState(() {
-        _elapsedTime = '${difference.inMinutes}分経過';
+        _elapsedTime = '${difference.inMinutes}分経過'; // 常に更新
       });
     }
   }
+
+  // 経過時間が長いと判断する閾値（分）
+  static const int _overdueThresholdMinutes = 15;
+
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +153,12 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
             // --- 上部：注文番号ヘッダー ---
             // こちらはCardの丸みに沿う
             Container(
-              color: (isWaiting ?Colors.blueGrey[50]: const Color.fromARGB(255, 255, 224, 224)) ,// ヘッダーの背景色
+              // 経過時間に応じて色を調整
+              decoration: BoxDecoration(
+                color: isWaiting && widget.order.createdAt != null && DateTime.now().difference(widget.order.createdAt!).inMinutes >= _overdueThresholdMinutes
+                    ? const Color.fromARGB(255, 255, 245, 205) // 10分以上経過で赤系の背景
+                    : (isWaiting ? Colors.blueGrey[50] : const Color.fromARGB(255, 255, 224, 224)),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
@@ -164,7 +173,9 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
                   if (isWaiting && _elapsedTime.isNotEmpty)
                     Text(
                       _elapsedTime,
-                      style: TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        color: widget.order.createdAt != null && DateTime.now().difference(widget.order.createdAt!).inMinutes >= _overdueThresholdMinutes ? Colors.red.shade900 : Colors.red.shade700,
+                        fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                 ],
               ),

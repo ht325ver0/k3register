@@ -29,7 +29,8 @@ class _OrderCheckPageState extends State<OrderCheckPage> {
           bottom: TabBar(
             labelColor: Theme.of(context).primaryColor, // 選択中のタブの文字色
             unselectedLabelColor: Colors.grey[600], // 未選択のタブの文字色
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), // 選択中のタブのスタイル
+            labelStyle:
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 16), // 選択中のタブのスタイル
             unselectedLabelStyle: const TextStyle(fontSize: 16), // 未選択のタブのスタイル
             indicatorWeight: 3.0, // インジケーター（下線）の太さ
             tabs: const <Widget>[

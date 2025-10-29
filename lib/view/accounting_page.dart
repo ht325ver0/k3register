@@ -61,6 +61,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
     // Orderオブジェクトを作成
     final order = Order(
       totalPrice: totalAmount,
+      // createdAtはDB側で自動設定されるため、ここでは含めない
       items: cart
           .map((cartProduct) => OrderItem( // CartProductからOrderItemに変換
                 productId: cartProduct.product.id,

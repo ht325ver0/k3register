@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:k3register/component/order_product_card.dart';
 import 'package:k3register/model/order.dart';
 import 'package:k3register/provider/product_provider.dart';
 import 'package:collection/collection.dart';
@@ -32,8 +31,7 @@ class CookingCounter extends ConsumerWidget {
           // 注文内の各商品をループ
           for (final item in order.items) {
             // 商品IDに対応する商品情報を探す
-            final product =
-                products.firstWhereOrNull((p) => p.id == item.productId);
+            final product = products.firstWhereOrNull((p) => p.id == item.productId);
 
             if (product != null) {
               // 商品名（部位）をキーとして数量を加算
@@ -46,8 +44,15 @@ class CookingCounter extends ConsumerWidget {
           }
         }
 
+        // 本数が多い順にソート
         final sortedParts = partCounts.entries.toList()
           ..sort((a, b) => b.value.compareTo(a.value));
+
+        if (sortedParts.isEmpty) {
+          return const Center(
+            child: Text('調理待ちの注文はありません'),
+          );
+        }
 
         return ListView.separated(
           padding: const EdgeInsets.all(16.0),

@@ -7,13 +7,39 @@ import 'package:k3register/model/product.dart';
 import 'package:k3register/infrastructure/orders_repository.dart';
 import 'package:collection/collection.dart';
 
+import 'dart:async';
+
 /// 1つの注文内容全体を表示するカード
-class OrderProductCard extends ConsumerWidget {
+class OrderProductCard extends ConsumerStatefulWidget {
   final Order order; // 表示する注文データ
 
   const OrderProductCard({super.key, required this.order});
 
-  void _changeOrderState(WidgetRef ref, Order order) {
+  @override
+  ConsumerState<OrderProductCard> createState() => _OrderProductCardState();
+}
+
+class _OrderProductCardState extends ConsumerState<OrderProductCard> {
+  Timer? _timer;
+  String _elapsedTime = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _updateElapsedTime();
+    // 1分ごとに経過時間を更新するためのタイマー
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      _updateElapsedTime();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _changeOrderState(Order order) {
     final orderId = order.id;
     if (orderId != null) {
       final newState = order.hasProvided == 'waiting' ? 'calling' : 'completed';
@@ -21,10 +47,21 @@ class OrderProductCard extends ConsumerWidget {
     }
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void _updateElapsedTime() {
+    if (!mounted) return;
+    final createdAt = widget.order.createdAt;
+    if (createdAt != null) {
+      final difference = DateTime.now().difference(createdAt);
+      setState(() {
+        _elapsedTime = '${difference.inMinutes}分経過';
+      });
+    }
+  }
 
-    final isWaiting = order.hasProvided == 'waiting';
+  @override
+  Widget build(BuildContext context) {
+
+    final isWaiting = widget.order.hasProvided == 'waiting';
 
     return Card(
       // Card自体の角を丸くする
@@ -37,8 +74,8 @@ class OrderProductCard extends ConsumerWidget {
           // 全商品リストを取得して、データが利用可能な場合にダイアログを表示
           ref.read(productsProvider).when(
                 data: (products) {
-                  // 注文商品リストから表示用のウィジェットリストを作成
-                  final itemWidgets = order.items.map((orderItem) {
+                  // 注文商品リストから表示用のウィジェットリストを作成                  
+                  final itemWidgets = widget.order.items.map((orderItem) {
                     // 商品IDに一致する商品情報を探す
                     // `firstWhere` は商品が見つからない場合に例外を投げるため、`collection` パッケージの `firstWhereOrNull` を使用して安全に処理します。
                     // `collection` パッケージのインポートが必要になる場合があります: `import 'package:collection/collection.dart';`
@@ -70,7 +107,7 @@ class OrderProductCard extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min, // Columnの高さをコンテンツに合わせる
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("注文番号: ${order.id ?? 'N/A'}",
+                            Text("注文番号: ${widget.order.id ?? 'N/A'}",
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 20)),
                             const Divider(height: 24),
@@ -89,7 +126,7 @@ class OrderProductCard extends ConsumerWidget {
                           ElevatedButton(
                               child: const Text("OK"),
                               onPressed: () {
-                                _changeOrderState(ref,order);
+                                _changeOrderState(widget.order);
                                 Navigator.pop(context);
                               }),
                         ],
@@ -119,10 +156,16 @@ class OrderProductCard extends ConsumerWidget {
                   const Text("注文番号", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                   const SizedBox(width: 8),
                   Text(
-                    order.id?.toString() ?? 'N/A',
+                    widget.order.id?.toString() ?? 'N/A',
                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   const Spacer(),
+                  // 経過時間を表示
+                  if (isWaiting && _elapsedTime.isNotEmpty)
+                    Text(
+                      _elapsedTime,
+                      style: TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
                 ],
               ),
             ),
@@ -131,9 +174,9 @@ class OrderProductCard extends ConsumerWidget {
             ListView.builder(
               shrinkWrap: true, // Columnの中で使うため必須
               physics: const NeverScrollableScrollPhysics(), // 親のスクロールと競合させない
-              itemCount: order.items.length,
+              itemCount: widget.order.items.length,
               itemBuilder: (context, index) {
-                final orderItem = order.items[index];
+                final orderItem = widget.order.items[index];
                 return _OrderItemTile(orderItem: orderItem);
               },
             ),

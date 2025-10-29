@@ -13,6 +13,9 @@ _$OrderImpl _$$OrderImplFromJson(Map<String, dynamic> json) => _$OrderImpl(
           .toList(),
       totalPrice: (json['total_price'] as num).toInt(),
       hasProvided: json['has_provided'] as String? ?? 'waiting',
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
@@ -21,4 +24,5 @@ Map<String, dynamic> _$$OrderImplToJson(_$OrderImpl instance) =>
       'order_items': instance.items,
       'total_price': instance.totalPrice,
       'has_provided': instance.hasProvided,
+      'created_at': instance.createdAt?.toIso8601String(),
     };

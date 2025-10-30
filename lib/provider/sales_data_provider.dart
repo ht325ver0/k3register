@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'sales_data_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class SalesData extends _$SalesData {
   @override
   Future<List<SalesSummary>> build() async {
@@ -27,6 +27,7 @@ class SalesData extends _$SalesData {
       return;
     }
 
+    final previousValue = state.value;
     // ローディング状態にする
     state = const AsyncValue.loading();
 
@@ -35,12 +36,9 @@ class SalesData extends _$SalesData {
       final repository = ref.read(orderRepositoryProvider);
       final summary = await repository.fetchSalesSummaryByDate(normalizedNewDate);
 
-      // 既存のキャッシュ（List）を取得
-      final currentData = state.value ?? [];
-
       // 新しいデータをListに追加して、新しいListを作成
       return [
-        ...currentData,
+        ...?previousValue,
         summary,
       ];
     });

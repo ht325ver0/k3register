@@ -6,12 +6,12 @@ part of 'sales_data_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$salesDataHash() => r'9f99c8c85c64be4a8bfcbf9d8284461063844802';
+String _$salesDataHash() => r'0ca0efd4c2a1c7d8b8cbc48e4be8b3d3239f61f8';
 
 /// See also [SalesData].
 @ProviderFor(SalesData)
 final salesDataProvider =
-    AutoDisposeAsyncNotifierProvider<SalesData, List<SalesSummary>>.internal(
+    AsyncNotifierProvider<SalesData, List<SalesSummary>>.internal(
   SalesData.new,
   name: r'salesDataProvider',
   debugGetCreateSourceHash:
@@ -20,6 +20,6 @@ final salesDataProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SalesData = AutoDisposeAsyncNotifier<List<SalesSummary>>;
+typedef _$SalesData = AsyncNotifier<List<SalesSummary>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

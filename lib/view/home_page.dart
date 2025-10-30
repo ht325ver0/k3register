@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:k3register/view/cash_register_page.dart';
 import 'package:k3register/view/order-display-page.dart';
 import 'package:k3register/view/order_check_page.dart';
+import 'package:k3register/view/sales_data_page.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -57,6 +58,18 @@ class Home extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10))),
               child: const Text('オーダーディスプレイ', style: TextStyle(fontSize: 24)),
             ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SalesDataPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              child: const Text('売り上げデータ', style: TextStyle(fontSize: 24)),
+                )
           ]
         ),
       ),

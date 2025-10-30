@@ -80,24 +80,33 @@ class _SalesDataPageState extends ConsumerState<SalesDataPage> {
               ? 0
               : summary.totalSales ~/ summary.totalOrders;
 
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
-              childAspectRatio: 1.5,
-              children: [
-                DataCard(title: '売上総額', value: '¥${NumberFormat("#,###").format(summary.totalSales)}', icon: Icons.trending_up, color: Colors.green),
-                DataCard(title: '客数', value: '${summary.totalOrders}人', icon: Icons.people, color: Colors.blue),
-                DataCard(title: '販売本数', value: '${summary.totalItems}本', icon: Icons.kebab_dining, color: Colors.teal),
-                DataCard(title: '平均客単価', value: '¥${NumberFormat("#,###").format(averagePrice)}', icon: Icons.monetization_on, color: Colors.orange),
-                InkWell(
-                  onTap: () => _showPartCountsDialog(context, summary.partCounts),
-                  child: const DataCard(title: '部位別集計', value: '詳細を見る', icon: Icons.pie_chart, color: Colors.purple),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              // 画面幅に応じてレイアウトを調整
+              final isPhoneLayout = constraints.maxWidth < 600;
+              final crossAxisCount = isPhoneLayout ? 1 : 2;
+              final childAspectRatio = isPhoneLayout ? 2.5 : 1.5;
+
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GridView.count(
+                  crossAxisCount: crossAxisCount,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                  childAspectRatio: childAspectRatio,
+                  children: [
+                    DataCard(title: '売上総額', value: '¥${NumberFormat("#,###").format(summary.totalSales)}', icon: Icons.trending_up, color: Colors.green),
+                    DataCard(title: '客数', value: '${summary.totalOrders}人', icon: Icons.people, color: Colors.blue),
+                    DataCard(title: '販売本数', value: '${summary.totalItems}本', icon: Icons.kebab_dining, color: Colors.teal),
+                    DataCard(title: '平均客単価', value: '¥${NumberFormat("#,###").format(averagePrice)}', icon: Icons.monetization_on, color: Colors.orange),
+                    InkWell(
+                      onTap: () => _showPartCountsDialog(context, summary.partCounts),
+                      child: const DataCard(title: '部位別集計', value: '詳細を見る', icon: Icons.pie_chart, color: Colors.purple),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           );
         },
       ),

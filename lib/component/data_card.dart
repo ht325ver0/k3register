@@ -27,7 +27,7 @@ class DataCard extends StatelessWidget {
             Row(
               children: [
                 Icon(icon, color: color, size: 30),
-                const SizedBox(width: 10),
+                const SizedBox(width: 5),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -37,7 +37,7 @@ class DataCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 10),
             Align(
               alignment: Alignment.bottomRight,
               child: Text(

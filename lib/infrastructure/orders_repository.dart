@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:k3register/model/order.dart';
+import 'package:k3register/model/sales_summary.dart';
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -18,6 +19,9 @@ abstract class IOrderRepository {
 
   /// 注文の状態を更新する
   Future<void> updateOrderState(int id, String newState);
+
+  /// 指定した日付の売上サマリーを取得する
+  Future<SalesSummary> fetchSalesSummaryByDate(DateTime date);
 }
 
 /// 注文データに関するデータアクセス層
@@ -65,6 +69,37 @@ class OrderRepository implements IOrderRepository {
       }
     }
     return orders;
+  }
+
+  @override
+  Future<SalesSummary> fetchSalesSummaryByDate(DateTime date) async {
+    try {
+      // DateTimeを 'YYYY-MM-DD' 形式の文字列に変換
+      final dateString = '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+
+      debugPrint(dateString);
+
+      final result = await _client.rpc(
+        'get_sales_summary_by_date',
+        params: {'target_date': dateString},
+      );
+
+      debugPrint('--- fetch sales summary by date---');
+      debugPrint(result.toString());
+
+      if (result is List && result.isNotEmpty) {
+        // データベースから返されたJSONをSalesSummaryオブジェクトに変換
+        final json = result.first as Map<String, dynamic>;
+        // RPCの結果には日付が含まれないため、ここで追加する
+        json['date'] = date.toIso8601String();
+        return SalesSummary.fromJson(json);
+      }
+      // 結果が空の場合は、ゼロのサマリーを返す
+      return SalesSummary(date: date);
+    } catch (e) {
+      debugPrint('Error fetching sales summary by date: $e');
+      rethrow;
+    }
   }
 
   @override

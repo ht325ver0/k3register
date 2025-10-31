@@ -1,6 +1,7 @@
 import 'package:k3register/model/cart_product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:k3register/model/product.dart';
+import 'package:collection/collection.dart';
 
 
 part 'cart_provider.g.dart';
@@ -91,7 +92,46 @@ class Cart extends _$Cart {
 /// カート内の商品の合計金額を計算するProvider
 /// cartProviderの状態が変更されると、このProviderも自動的に再計算される
 @riverpod
-int cartTotal(CartTotalRef ref) {
+int cartTotal(CartTotalRef ref, List<String> requiredParts) {
   final cart = ref.watch(cartProvider);
-  return cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+  if (cart.isEmpty) {
+    return 0;
+  }
+
+  // 2. 作成可能なセット数を計算
+  final setCount = ref.read(cartProvider.notifier).calculateSetCount(requiredParts);
+
+  // 3. セット価格を計算
+  final totalSetPrice = setCount * 300;
+
+  // 4. セットに使われなかった「余り」の商品の価格を計算
+  int remainingItemsPrice = 0;
+  // まず、セット対象外の全商品の価格を合計
+  remainingItemsPrice += cart
+      .where((item) => !requiredParts.contains(item.product.name))
+      .fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+
+  // 次に、セット対象だが余った商品の価格を合計
+  // この計算のために、再度カート内の部位ごとの数量を集計します
+  final Map<String, int> cartPartCounts = {};
+  for (final item in cart) {
+    if (requiredParts.contains(item.product.name)) {
+      cartPartCounts.update(
+        item.product.name,
+        (value) => value + item.quantity,
+        ifAbsent: () => item.quantity,
+      );
+    }
+  }
+
+  for (final partName in requiredParts) {
+    final product = cart.firstWhereOrNull((item) => item.product.name == partName)?.product;
+    if (product != null && cartPartCounts.containsKey(partName)) {
+      final remainingQuantity = cartPartCounts[partName]! - setCount;
+      remainingItemsPrice += product.price * remainingQuantity;
+    }
+  }
+
+  // 5. 最終的な合計金額を返す
+  return totalSetPrice + remainingItemsPrice;
 }

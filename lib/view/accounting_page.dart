@@ -51,7 +51,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
 
   Future<int?> submitOrder() async {
     final cart = ref.read(cartProvider);
-    final totalAmount = ref.read(cartTotalProvider);
+    // セット割引の対象となる部位リストを引数として渡す
+    final totalAmount = ref.read(cartTotalProvider(['もも', 'かわ', 'つくね']));
 
     if (cart.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('カートが空です')));
@@ -85,7 +86,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
   /// 会計確定処理
   Future<void> _handleCheckout() async {
     final cart = ref.read(cartProvider);
-    final totalAmount = ref.read(cartTotalProvider);
+    // セット割引の対象となる部位リストを引数として渡す
+    final totalAmount = ref.read(cartTotalProvider(['もも', 'かわ', 'つくね']));
     final receivedAmount = int.tryParse(_displayValue) ?? 0;
     final change = receivedAmount - totalAmount;
 
@@ -214,7 +216,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
   @override
   Widget build(BuildContext context) {
     final cart = ref.watch(cartProvider);
-    final totalAmount = ref.watch(cartTotalProvider);
+    // セット割引の対象となる部位リストを引数として渡す
+    final totalAmount = ref.watch(cartTotalProvider(['もも', 'かわ', 'つくね']));
     final receivedAmount = int.tryParse(_displayValue) ?? 0;
     final change = receivedAmount - totalAmount;
 

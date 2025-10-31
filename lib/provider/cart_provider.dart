@@ -26,6 +26,33 @@ class Cart extends _$Cart {
     }
   }
 
+  int calculateSetCount(List<String> requiredParts) {
+    // カート内の商品を部位名でグループ化し、それぞれの合計数量を計算
+    final Map<String, int> cartPartCounts = {};
+    for (final item in state) {
+      cartPartCounts.update(
+        item.product.name,
+        (value) => value + item.quantity,
+        ifAbsent: () => item.quantity,
+      );
+    }
+
+    // 必要な部位が1つでもカートにない場合、セットは作れないので0を返す
+    for (final part in requiredParts) {
+      if (!cartPartCounts.containsKey(part)) {
+        return 0;
+      }
+    }
+
+    // セットを構成する部位の数量リストを作成
+    final quantitiesForSet = requiredParts.map((part) => cartPartCounts[part]!).toList();
+
+    // 数量リストの中で最も小さい値が、作れるセットの最大数になる
+    // 例: もも(2), かわ(3), つくね(1) => 1セット
+    // 例: もも(2), かわ(3), つくね(5) => 2セット
+    return quantitiesForSet.fold(quantitiesForSet.first, (min, current) => min < current ? min : current);
+  }
+
   void increment(CartProduct cartProduct) {
     state = [
       for (final item in state)

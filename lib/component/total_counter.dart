@@ -24,14 +24,15 @@ class TotalCounter extends ConsumerWidget {
     final regularPrice = cartProducts.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
     final totalAmount = ref.watch(cartTotalProvider(['もも', 'かわ', 'つくね']));
 
-    final int discountAmount =
-        discountRatio > 0 ? discountMoney * (totalQuantity ~/ discountRatio) : 0;
-
-    final int finalPrice = regularPrice - discountAmount;
+    // セット割引額を計算
+    final int setDiscountAmount = regularPrice - totalAmount;
+    
+    // 適用されたセット数を計算
+    final setCount = ref.read(cartProvider.notifier).calculateSetCount(['もも', 'かわ', 'つくね']);
 
     // スタイルを定義しておくと、一貫性のあるUIを保ちやすくなります。
     final labelStyle = Theme.of(context).textTheme.headlineSmall; // フォントサイズを大きく
-    final valueStyle = Theme.of(context).textTheme.headlineSmall; // フォントサイズを大きく
+    final valueStyle = Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold); // フォントサイズを大きく、太字に
 
     return Material(
       elevation: 8.0, // カートリストとの区別を明確にするための影
@@ -55,14 +56,16 @@ class TotalCounter extends ConsumerWidget {
                 Text("¥$regularPrice", style: valueStyle),
               ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("割引額", style: labelStyle?.copyWith(color: Colors.red)),
-                Text("-¥$discountAmount",
-                    style: valueStyle?.copyWith(color: Colors.red)),
-              ],
-            ),
+            // セット割引が適用されている場合のみ割引額を表示
+            if (setDiscountAmount > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("セット割引 ($setCountセット分)", style: labelStyle?.copyWith(color: Colors.red)),
+                  Text("-¥$setDiscountAmount",
+                      style: valueStyle?.copyWith(color: Colors.red)),
+                ],
+              ),
             const Divider(height: 24, thickness: 1),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -133,8 +133,23 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
             const Divider(height: 24),
             Text('【会計】', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            // 金額表示
-            _buildAmountRow('合計金額', '¥$totalAmount', context),
+            // 金額表示エリア
+            Builder(builder: (context) {
+              final regularPrice = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+              final setDiscountAmount = regularPrice - totalAmount;
+              final setCount = ref.read(cartProvider.notifier).calculateSetCount(['もも', 'かわ', 'つくね']);
+
+              if (setDiscountAmount > 0) {
+                return Column(
+                  children: [
+                    _buildAmountRow('定価合計', '¥$regularPrice', context),
+                    _buildAmountRow('セット割引 ($setCountセット)', '-¥$setDiscountAmount', context, isDiscount: true),
+                  ],
+                );
+              }
+              return const SizedBox.shrink(); // 割引がない場合は何も表示しない
+            }),
+            _buildAmountRow('合計金額', '¥$totalAmount', context, isEmphasized: true),
             _buildAmountRow('お預かり', '¥$receivedAmount', context),
             _buildAmountRow('お釣り', '¥$change', context, isEmphasized: true),
           ],
@@ -190,10 +205,11 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
   }
 
   /// ダイアログ内の金額表示用の行を構築するヘルパーウィジェット
-  Widget _buildAmountRow(String label, String value, BuildContext context, {bool isEmphasized = false}) {
+  Widget _buildAmountRow(String label, String value, BuildContext context, {bool isEmphasized = false, bool isDiscount = false}) {
     final valueStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
           fontWeight: isEmphasized ? FontWeight.bold : FontWeight.normal,
           fontSize: isEmphasized ? 20 : 18,
+          color: isDiscount ? Colors.red : (isEmphasized ? Theme.of(context).primaryColor : null),
         );
 
     return Padding(
@@ -201,7 +217,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: Theme.of(context).textTheme.titleMedium),
+          Text(label, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: isDiscount ? Colors.red : null)),
           Text(
             value,
             style: isEmphasized
@@ -245,12 +261,26 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                children: [ // 金額表示のフォントサイズを大きく
-                  AmountCard(amount: totalAmount, title: '合計金額', color: Colors.white),
-                  const Divider(height: 10),
-                  // お預かり金額カード
-                  AmountCard(amount: receivedAmount, title: 'お預かり', color: Colors.blue[50] ?? Colors.blue.shade50),
-                  AmountCard(amount: change, title: 'お釣り', color: Colors.green[50] ?? Colors.green.shade50),
+                children: [
+                  Builder(builder: (context) {
+                    final regularPrice = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+                    final setDiscountAmount = regularPrice - totalAmount;
+
+                    if (setDiscountAmount > 0) {
+                      return Column(
+                        children: [
+                          AmountCard(amount: regularPrice, title: '定価合計'),
+                          AmountCard(amount: -setDiscountAmount, title: 'セット割引', color: Colors.red.shade50),
+                          const Divider(height: 10),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                  AmountCard(amount: totalAmount, title: '合計金額', color: Colors.yellow.shade100),
+                  const SizedBox(height: 24),
+                  AmountCard(amount: receivedAmount, title: 'お預かり', color: Colors.blue.shade50),
+                  AmountCard(amount: change, title: 'お釣り', color: Colors.green.shade50),
                   const Spacer(flex: 3),
                   Keypad(onKeyPressed: (value) => onKeyPressed(value, totalAmount)),
                 ],

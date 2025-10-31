@@ -6,15 +6,11 @@ import 'package:k3register/provider/cart_provider.dart';
 class TotalCounter extends ConsumerWidget {
   // 1. 単一のCartProductではなく、List<CartProduct>を受け取るように変更
   final List<CartProduct> cartProducts;
-  final int discountMoney;
-  final int discountRatio;
   final VoidCallback onCheckout;
 
   const TotalCounter(
       {super.key,
       required this.cartProducts,
-      required this.discountMoney,
-      required this.discountRatio,
       required this.onCheckout});
 
   @override

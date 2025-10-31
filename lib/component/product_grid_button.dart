@@ -27,7 +27,15 @@ class ProductGridButton extends ConsumerWidget {
           for (var product in products) {
             (groupedProducts[product.name] ??= []).add(product);
           }
-          final partNames = groupedProducts.keys.toList();
+          final partNames = groupedProducts.keys.toList()
+            // parts_idに基づいて部位名をソートする
+            ..sort((a, b) {
+              // 各グループの最初の商品のparts_idを取得して比較する
+              // parts_idが存在しない場合は大きな値を割り当てて末尾に配置
+              final partsIdA = groupedProducts[a]?.first.id ?? 999;
+              final partsIdB = groupedProducts[b]?.first.id ?? 999;
+              return partsIdA.compareTo(partsIdB);
+            });
 
           // ListViewを使って部位ごとにセクション分けして表示
           return ListView.builder(
@@ -35,6 +43,12 @@ class ProductGridButton extends ConsumerWidget {
             itemBuilder: (context, index) {
               final partName = partNames[index];
               final productsByPart = groupedProducts[partName]!;
+              // 味（Taste Enum）の定義順でソートする
+              productsByPart.sort((a, b) {
+                final tasteIndexA = a.taste?.index ?? 99; // tasteがない場合は末尾
+                final tasteIndexB = b.taste?.index ?? 99;
+                return tasteIndexA.compareTo(tasteIndexB);
+              });
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

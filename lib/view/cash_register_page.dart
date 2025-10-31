@@ -42,8 +42,6 @@ class CashRegisterPage extends ConsumerWidget {
               // 合計金額表示エリア
               TotalCounter(
                   cartProducts: cartProducts,
-                  discountMoney: mockDiscountMoney,
-                  discountRatio: mockDiscountRatio,
                   onCheckout: () {
                     if(cartProducts.isEmpty){
                       showDialog(

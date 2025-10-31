@@ -1,6 +1,7 @@
 import 'package:k3register/model/cart_product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:k3register/model/product.dart';
+import 'package:collection/collection.dart';
 
 
 part 'cart_provider.g.dart';
@@ -24,6 +25,34 @@ class Cart extends _$Cart {
       // カートに同じ商品がなかった場合：新しい商品として追加する
       state = [...state, CartProduct(product: product, quantity: 1)];
     }
+  }
+
+  int calculateSetCount(List<String> requiredParts) {
+    // カート内の商品を部位名でグループ化し、それぞれの合計数量を計算
+    final Map<String, int> cartPartCounts = {};
+    for (final item in state) {
+      cartPartCounts.update(
+        item.product.name,
+        (value) => value + item.quantity,
+        ifAbsent: () => item.quantity,
+      );
+    }
+
+    // 必要な部位が1つでもカートにない場合、セットは作れないので0を返す
+    for (final part in requiredParts) {
+      if (!cartPartCounts.containsKey(part)) {
+        return 0;
+      }
+    }
+
+    final quantitiesForSet = requiredParts.map((part) => cartPartCounts[part]!).toList();
+    if (quantitiesForSet.isEmpty) {
+      return 0;
+    }
+    // 数量リストの中で最も小さい値が、作れるセットの最大数になる
+    // 例: もも(2), かわ(3), つくね(1) => 1セット
+    // 例: もも(2), かわ(3), つくね(5) => 2セット
+    return quantitiesForSet.reduce((a, b) => a < b ? a : b);
   }
 
   void increment(CartProduct cartProduct) {
@@ -61,10 +90,46 @@ class Cart extends _$Cart {
 
 }
 
+/// カート内の商品の定価合計金額を計算するProvider
+@riverpod
+int regularCartTotal(RegularCartTotalRef ref) {
+  final cart = ref.watch(cartProvider);
+  return cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+}
+
 /// カート内の商品の合計金額を計算するProvider
 /// cartProviderの状態が変更されると、このProviderも自動的に再計算される
 @riverpod
-int cartTotal(CartTotalRef ref) {
+int cartTotal(CartTotalRef ref, List<String> requiredParts) {
   final cart = ref.watch(cartProvider);
-  return cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+  if (cart.isEmpty || requiredParts.isEmpty) {
+    return 0;
+  }
+
+  // 2. 作成可能なセット数を計算
+  final setCount = ref.read(cartProvider.notifier).calculateSetCount(requiredParts);
+
+  // 通常の合計金額を計算
+  final regularPrice = ref.watch(regularCartTotalProvider);
+
+  if (setCount == 0) {
+    return regularPrice;
+  }
+
+  // 3. セット1つあたりの通常価格を計算
+  final regularSetPrice = requiredParts
+      .map((partName) => cart.firstWhereOrNull((item) => item.product.name == partName)?.product.price ?? 0)
+      .fold<int>(0, (sum, price) => sum + price);
+
+  // セット割引が適用できない場合（例えば、セット対象商品がカートにない場合）
+  if (regularSetPrice == 0) {
+    return regularPrice;
+  }
+
+  // 4. セット割引額を計算
+  const setDiscountPrice = 300; // TODO: 定数として管理することを推奨します
+  final totalDiscount = setCount * (regularSetPrice - setDiscountPrice);
+
+  // 5. 最終的な合計金額を返す
+  return regularPrice - totalDiscount;
 }

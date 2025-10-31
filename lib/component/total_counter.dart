@@ -21,7 +21,7 @@ class TotalCounter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     final totalQuantity = cartProducts.fold<int>(0, (sum, item) => sum + item.quantity);
-    final regularPrice = cartProducts.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+    final regularPrice = ref.watch(regularCartTotalProvider);
     final totalAmount = ref.watch(cartTotalProvider(['もも', 'かわ', 'つくね']));
 
     // セット割引額を計算

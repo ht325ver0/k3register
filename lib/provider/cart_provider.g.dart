@@ -6,7 +6,26 @@ part of 'cart_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$cartTotalHash() => r'52b5b45bbe53891a765daff970cc95dcea97681c';
+String _$regularCartTotalHash() => r'7accd4541aa951e09981d829f6bfb59c4dac9f75';
+
+/// カート内の商品の定価合計金額を計算するProvider
+///
+/// Copied from [regularCartTotal].
+@ProviderFor(regularCartTotal)
+final regularCartTotalProvider = AutoDisposeProvider<int>.internal(
+  regularCartTotal,
+  name: r'regularCartTotalProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$regularCartTotalHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef RegularCartTotalRef = AutoDisposeProviderRef<int>;
+String _$cartTotalHash() => r'660944169ac96cdb32cc9ac3267119e274927e8a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -174,7 +193,7 @@ class _CartTotalProviderElement extends AutoDisposeProviderElement<int>
   List<String> get requiredParts => (origin as CartTotalProvider).requiredParts;
 }
 
-String _$cartHash() => r'b25c665cefc26852f082e16b5db11ce74a430bb1';
+String _$cartHash() => r'48d2b14457d5bae68dc55ce707658784d6f4e7e7';
 
 /// See also [Cart].
 @ProviderFor(Cart)

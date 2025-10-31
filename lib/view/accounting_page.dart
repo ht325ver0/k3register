@@ -135,7 +135,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
             const SizedBox(height: 8),
             // 金額表示エリア
             Builder(builder: (context) {
-              final regularPrice = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+              final regularPrice = ref.watch(regularCartTotalProvider);
               final setDiscountAmount = regularPrice - totalAmount;
               final setCount = ref.read(cartProvider.notifier).calculateSetCount(['もも', 'かわ', 'つくね']);
 
@@ -262,8 +262,8 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  Builder(builder: (context) {
-                    final regularPrice = cart.fold<int>(0, (sum, item) => sum + item.product.price * item.quantity);
+                  Consumer(builder: (context, ref, _) {
+                    final regularPrice = ref.watch(regularCartTotalProvider);
                     final setDiscountAmount = regularPrice - totalAmount;
 
                     if (setDiscountAmount > 0) {

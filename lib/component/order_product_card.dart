@@ -177,6 +177,7 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
                         color: widget.order.createdAt != null && DateTime.now().difference(widget.order.createdAt!).inMinutes >= _overdueThresholdMinutes ? Colors.red.shade900 : Colors.red.shade700,
                         fontWeight: FontWeight.bold, fontSize: 16),
                     ),
+                  IconButton(onPressed: () => ref.read(orderRepositoryProvider).updateOrderState(widget.order.id!, 'canceled'), icon: const Icon(Icons.delete)),
                 ],
               ),
             ),

@@ -27,7 +27,6 @@ class SalesData extends _$SalesData {
       return;
     }
 
-    final previousValue = state.value;
     // ローディング状態にする
     state = const AsyncValue.loading();
 
@@ -36,9 +35,11 @@ class SalesData extends _$SalesData {
       final repository = ref.read(orderRepositoryProvider);
       final summary = await repository.fetchSalesSummaryByDate(normalizedNewDate);
 
+      // 既存のキャッシュを取得（なければ空のリスト）
+      final currentData = state.value ?? [];
       // 新しいデータをListに追加して、新しいListを作成
       return [
-        ...?previousValue,
+        ...currentData,
         summary,
       ];
     });

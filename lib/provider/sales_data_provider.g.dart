@@ -6,7 +6,7 @@ part of 'sales_data_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$salesDataHash() => r'52e727dd6b43e7ba792ad043cd0ba5c51a46c361';
+String _$salesDataHash() => r'fe96d12e5672645ad60fd91bafaa4ca029ac960e';
 
 /// See also [SalesData].
 @ProviderFor(SalesData)

@@ -177,6 +177,44 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
                         color: widget.order.createdAt != null && DateTime.now().difference(widget.order.createdAt!).inMinutes >= _overdueThresholdMinutes ? Colors.red.shade900 : Colors.red.shade700,
                         fontWeight: FontWeight.bold, fontSize: 16),
                     ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('キャンセル確認'),
+                          content: Text('注文番号 ${widget.order.id} を本当にキャンセルしますか？\nこの操作は元に戻せません。'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('戻る'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white, // 文字色を白に設定
+                              ),
+                              child: const Text(
+                                'キャンセル実行',
+                                style: TextStyle(fontWeight: FontWeight.bold), // 文字を少し細くする
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirmed == true) {
+                        final orderId = widget.order.id;
+                        if (orderId != null) {
+                          ref.read(orderRepositoryProvider).updateOrderState(orderId, 'canceled');
+                        } else {
+                          // IDがnullの場合のエラーハンドリングを検討してください (例: ログ出力)
+                          debugPrint('Cannot cancel order because Order ID is null.');
+                        }
+                      }
+                    },
+                  ),
                 ],
               ),
             ),

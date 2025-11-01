@@ -110,29 +110,24 @@ class OrderRepository implements IOrderRepository {
     // 現在の注文リストを保持する変数
     List<Order> currentOrders = [];
 
-    // 2. まず最初に現在の注文リストを取得してStreamに流す
-    _fetchCurrentOrders().then((orders) {
-      if (!controller.isClosed) {
-        currentOrders = orders..sort((a, b) => (a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).compareTo(b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
-        controller.add(currentOrders);
-      }
-    }).catchError((e, st) { // 初期データ取得に失敗した場合
-      if (!controller.isClosed) {
-        controller.addError(e, st);
-        controller.close();
-      }
-      return; 
-    });
+  Future<void> setupStream() async {
+    try {
+      // 1. まず最初に現在の注文リストを取得してStreamに流す
+      final orders = await _fetchCurrentOrders();
+      if (controller.isClosed) return;
 
-    // 3. 'orders'テーブルの変更を監視するチャンネルを購読
-    final channel = _client
-        .channel('public:orders')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.all, // すべての変更（INSERT, UPDATE, DELETE）を監視
-          schema: 'public',
-          table: 'orders',
-          callback: (payload) async {
-            debugPrint('Order table changed: ${payload.toString()}');
+      currentOrders = orders..sort((a, b) => (a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).compareTo(b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
+      controller.add(currentOrders);
+
+      // 2. 最初の取得が完了してから、変更の監視を開始する
+      final channel = _client
+          .channel('public:orders')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'orders',
+            callback: (payload) async {
+              debugPrint('Order table changed: ${payload.toString()}');
 
             final eventType = payload.eventType;
             Map<String, dynamic>? record;
@@ -181,14 +176,22 @@ class OrderRepository implements IOrderRepository {
             controller.add(updatedOrders);
           },
         ).subscribe();
+            // 3. Streamがキャンセルされたらチャンネルを閉じる
+      controller.onCancel = () {
+        _client.removeChannel(channel);
+      };
 
-    // 4. このStreamの監視が終了したら、Supabaseのチャンネルも閉じる
-    controller.onCancel = () {
-      _client.removeChannel(channel);
-    };
-
-    return controller.stream;
+          } catch (e, st) {
+      if (!controller.isClosed) {
+        controller.addError(e, st);
+      }
+    }
   }
+
+  setupStream();
+
+  return controller.stream;
+}
 
   /// IDを指定して単一の注文（関連アイテム付き）を取得する内部メソッド
   Future<Order?> _fetchOrderById(int id) async {

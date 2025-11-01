@@ -113,7 +113,7 @@ class OrderRepository implements IOrderRepository {
     // 2. まず最初に現在の注文リストを取得してStreamに流す
     _fetchCurrentOrders().then((orders) {
       if (!controller.isClosed) {
-        currentOrders = orders..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+        currentOrders = orders..sort((a, b) => (a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).compareTo(b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
         controller.add(currentOrders);
       }
     }).catchError((e, st) { // 初期データ取得に失敗した場合
@@ -176,7 +176,7 @@ class OrderRepository implements IOrderRepository {
             }
 
             // ソートしてStreamに流し、現在のリストを更新する
-            updatedOrders.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+            updatedOrders.sort((a, b) => (a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)).compareTo(b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)));
             currentOrders = updatedOrders;
             controller.add(updatedOrders);
           },

@@ -105,12 +105,16 @@ class OrderRepository implements IOrderRepository {
   @override
   Stream<List<Order>> fetchOrdersStream() {
     // 1. Streamのコントローラーを作成
-    final controller = StreamController<List<Order>>();
+    final controller = StreamController<List<Order>>.broadcast();
+
+    // 現在の注文リストを保持する変数
+    List<Order> currentOrders = [];
 
     // 2. まず最初に現在の注文リストを取得してStreamに流す
     _fetchCurrentOrders().then((orders) {
       if (!controller.isClosed) {
-        controller.add(orders);
+        currentOrders = orders..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+        controller.add(currentOrders);
       }
     }).catchError((e, st) {
       if (!controller.isClosed) {
@@ -125,10 +129,54 @@ class OrderRepository implements IOrderRepository {
           event: PostgresChangeEvent.all, // すべての変更（INSERT, UPDATE, DELETE）を監視
           schema: 'public',
           table: 'orders',
-          callback: (payload) {
+          callback: (payload) async {
             debugPrint('Order table changed: ${payload.toString()}');
-            // 変更があったら、再度全件取得してStreamに流す
-            _fetchCurrentOrders().then((orders) => controller.add(orders));
+
+            final eventType = payload.eventType;
+            Map<String, dynamic>? record;
+
+            if (eventType == PostgresChangeEvent.insert || eventType == PostgresChangeEvent.update) {
+              record = payload.newRecord;
+            } else if (eventType == PostgresChangeEvent.delete) {
+              record = payload.oldRecord;
+            }
+
+            if (record == null || record['id'] == null) return;
+
+            final orderId = record['id'] as int;
+            var updatedOrders = List<Order>.from(currentOrders);
+
+            if (eventType == PostgresChangeEvent.insert) {
+              // 新規注文の場合、その注文だけを再取得してリストに追加
+              final newOrder = await _fetchOrderById(orderId);
+              if (newOrder != null) {
+                updatedOrders.add(newOrder);
+              }
+            } else if (eventType == PostgresChangeEvent.update) {
+              // 注文更新の場合、その注文だけを再取得
+              final updatedOrder = await _fetchOrderById(orderId);
+              final index = updatedOrders.indexWhere((o) => o.id == orderId);
+
+              if (updatedOrder != null && ['waiting', 'calling'].contains(updatedOrder.hasProvided)) {
+                // 'waiting' or 'calling' ならリストを更新
+                if (index != -1) {
+                  updatedOrders[index] = updatedOrder;
+                } else {
+                  updatedOrders.add(updatedOrder);
+                }
+              } else if (index != -1) {
+                // 'completed' などになった場合はリストから削除
+                updatedOrders.removeAt(index);
+              }
+            } else if (eventType == PostgresChangeEvent.delete) {
+              // 削除された場合はリストから削除
+              updatedOrders.removeWhere((o) => o.id == orderId);
+            }
+
+            // ソートしてStreamに流し、現在のリストを更新する
+            updatedOrders.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+            currentOrders = updatedOrders;
+            controller.add(updatedOrders);
           },
         ).subscribe();
 
@@ -140,6 +188,20 @@ class OrderRepository implements IOrderRepository {
     return controller.stream;
   }
 
+  /// IDを指定して単一の注文（関連アイテム付き）を取得する内部メソッド
+  Future<Order?> _fetchOrderById(int id) async {
+    try {
+      final response = await _client
+          .from('orders')
+          .select('*, order_items(*)')
+          .eq('id', id)
+          .single();
+      return Order.fromJson(response);
+    } catch (e) {
+      debugPrint('Error fetching order by ID $id: $e');
+      return null;
+    }
+  }
 
   @override
   Future<int> saveOrder(Order order) async {

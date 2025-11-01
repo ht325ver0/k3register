@@ -251,7 +251,7 @@ IOrderRepository orderRepository(OrderRepositoryRef ref) {
 }
 
 /// 未提供の注文リストをストリームで提供するProvider
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<List<Order>> ordersStream(OrdersStreamRef ref) {
   return ref.read(orderRepositoryProvider).fetchOrdersStream();
 }

@@ -23,13 +23,13 @@ final orderRepositoryProvider = AutoDisposeProvider<IOrderRepository>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef OrderRepositoryRef = AutoDisposeProviderRef<IOrderRepository>;
-String _$ordersStreamHash() => r'621173dbef2da52ae4101902e2ee942496ba29e6';
+String _$ordersStreamHash() => r'6f5ca6e1e8291b158f631c39c3a1d68ed6ea5e55';
 
 /// 未提供の注文リストをストリームで提供するProvider
 ///
 /// Copied from [ordersStream].
 @ProviderFor(ordersStream)
-final ordersStreamProvider = AutoDisposeStreamProvider<List<Order>>.internal(
+final ordersStreamProvider = StreamProvider<List<Order>>.internal(
   ordersStream,
   name: r'ordersStreamProvider',
   debugGetCreateSourceHash:
@@ -40,6 +40,6 @@ final ordersStreamProvider = AutoDisposeStreamProvider<List<Order>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef OrdersStreamRef = AutoDisposeStreamProviderRef<List<Order>>;
+typedef OrdersStreamRef = StreamProviderRef<List<Order>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

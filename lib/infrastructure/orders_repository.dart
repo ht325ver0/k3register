@@ -116,10 +116,12 @@ class OrderRepository implements IOrderRepository {
         currentOrders = orders..sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
         controller.add(currentOrders);
       }
-    }).catchError((e, st) {
+    }).catchError((e, st) { // 初期データ取得に失敗した場合
       if (!controller.isClosed) {
         controller.addError(e, st);
+        controller.close();
       }
+      return; 
     });
 
     // 3. 'orders'テーブルの変更を監視するチャンネルを購読

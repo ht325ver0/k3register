@@ -27,6 +27,8 @@ class SalesData extends _$SalesData {
       return;
     }
 
+    // 既存のデータを保持したままローディング状態にする
+    final previousState = state;
     // ローディング状態にする
     state = const AsyncValue.loading();
 
@@ -35,8 +37,8 @@ class SalesData extends _$SalesData {
       final repository = ref.read(orderRepositoryProvider);
       final summary = await repository.fetchSalesSummaryByDate(normalizedNewDate);
 
-      // 既存のキャッシュを取得（なければ空のリスト）
-      final currentData = state.value ?? [];
+      // 直前の状態からキャッシュを取得（なければ空のリスト）
+      final currentData = previousState.valueOrNull ?? [];
       // 新しいデータをListに追加して、新しいListを作成
       return [
         ...currentData,

@@ -205,7 +205,13 @@ class _OrderProductCardState extends ConsumerState<OrderProductCard> {
                         ),
                       );
                       if (confirmed == true) {
-                        ref.read(orderRepositoryProvider).updateOrderState(widget.order.id!, 'canceled');
+                        final orderId = widget.order.id;
+                        if (orderId != null) {
+                          ref.read(orderRepositoryProvider).updateOrderState(orderId, 'canceled');
+                        } else {
+                          // IDがnullの場合のエラーハンドリングを検討してください (例: ログ出力)
+                          debugPrint('Cannot cancel order because Order ID is null.');
+                        }
                       }
                     },
                   ),

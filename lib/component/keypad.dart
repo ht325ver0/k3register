@@ -33,7 +33,7 @@ class Keypad extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        mainAxisSpacing: 5.0,
+        mainAxisSpacing: 3.0,
         crossAxisSpacing: 10.0,
         childAspectRatio: 1.5,
       ),
@@ -54,6 +54,7 @@ class Keypad extends StatelessWidget {
   Widget _buildShortcutKeypad() {
     const shortcuts = ['C', 'ピッタリ', '1000', '500', '100', '50'];
     return Column (
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         GridView.builder(
           shrinkWrap: true,
@@ -62,7 +63,7 @@ class Keypad extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 5.0,
             crossAxisSpacing: 10.0,
-            childAspectRatio: 1.5,
+            childAspectRatio: 1.6,
           ),
           itemCount: shortcuts.length,
           itemBuilder: (context, index) {
@@ -119,6 +120,7 @@ class _KeypadButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.zero, // ボタン内部の余白をなくす
         minimumSize: Size.fromHeight(100), // isLargeに応じて高さを変更
         backgroundColor:
             backgroundColor ?? Theme.of(context).colorScheme.surface,

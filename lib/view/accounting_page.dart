@@ -259,7 +259,7 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
           Expanded(
             flex: 4,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(1),
               child: Column(
                 children: [
                   Consumer(builder: (context, ref, _) {
@@ -271,14 +271,14 @@ class _AccountingPageState extends ConsumerState<AccountingPage> {
                         children: [
                           AmountCard(amount: regularPrice, title: '定価合計'),
                           AmountCard(amount: -setDiscountAmount, title: 'セット割引', color: Colors.red.shade50),
-                          const Divider(height: 10),
+                          const Divider(height: 7),
                         ],
                       );
                     }
                     return const SizedBox.shrink();
                   }),
                   AmountCard(amount: totalAmount, title: '合計金額', color: Colors.yellow.shade100),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 10),
                   AmountCard(amount: receivedAmount, title: 'お預かり', color: Colors.blue.shade50),
                   AmountCard(amount: change, title: 'お釣り', color: Colors.green.shade50),
                   const Spacer(flex: 3),

@@ -54,6 +54,8 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
     // buildメソッド内でref.watchを呼び出す
     final ordersStream = ref.watch(ordersStreamProvider);
 
+
+
     return ordersStream.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, stack) => Center(child: Text('エラー: $err')),
@@ -62,6 +64,22 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
         final cookingOrders = orders.where((o) => o.hasProvided == 'waiting').toList();
         // お渡し待ちの注文を更新日時（呼ばれた日時）の降順でソート
         final callingOrders = orders.where((o) => o.hasProvided == 'calling').toList();
+
+        // 最も長く待っている注文の経過時間（分）を計算する
+        String _calcMaxWaitingTime() {
+          // 1. 調理中リストが空、または先頭の注文に作成日時がなければ0を返す
+          if (cookingOrders.isEmpty || cookingOrders.first.createdAt == null) {
+            return "~";
+          }
+          // 2. 安全に経過時間を計算して分で返す
+          final difference = DateTime.now().difference(cookingOrders.first.createdAt!);
+          final returnDifference = difference.inMinutes >= 30? "30分以上" : "${difference.inMinutes}分";
+          return returnDifference;
+        }
+
+        // 待ち時間を一度だけ計算して変数に格納する
+        final maxWaitingTimeText = _calcMaxWaitingTime();
+
 
         return Scaffold(
           // AppBarのスタイルを調整
@@ -91,12 +109,36 @@ class _OrderDisplayPageState extends ConsumerState<OrderDisplayPage> { // Consum
           // 右側のカラムをExpandedで囲む
           Expanded(
             flex: 8,
-            child: Column( // 右側のカラムの比率を1に設定
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // 子要素を左寄せにする
               children: [
                 // テキストの色を白に変更
-                const Text("お渡し待ち", style: TextStyle(fontSize: 60, color: Colors.black87)), // ref: を削除
+                const Center(
+                  child: Text("お渡し待ち", style: TextStyle(fontSize: 60, color: Colors.black87)),
+                ),
                 // callingOrdersとhighlightedIdsをOrderIdGridに渡す
-                OrderIdGrid(column: 1, orders: callingOrders, highlightedIds: _highlightedIds, aspect: 2.2),
+                OrderIdGrid(column: callingOrders.length >= 3? 1 : 1, orders: callingOrders, highlightedIds: _highlightedIds, aspect: callingOrders.length >= 3? 2.8 : 2.2),
+                // 待ち時間表示エリア
+                SizedBox(
+                  height: 400, // Stackの高さを確保
+                  child: Stack(
+                    children: [
+                      const Align(
+                        alignment: Alignment.topLeft,
+                        child: Text("ただいま最大", style: TextStyle(fontSize: 50, color: Colors.black87)),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(maxWaitingTimeText, style: TextStyle(fontSize: maxWaitingTimeText == "30分以上" ? 80 : 130, color: Colors.black87)),
+                      ),
+                      const Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text("待ち", style: TextStyle(fontSize: 50, color: Colors.black87)),
+                      ),
+                    ],
+                  ),
+                ),
+
               ],
             ),
           ),

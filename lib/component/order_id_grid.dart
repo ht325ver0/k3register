@@ -40,7 +40,7 @@ class OrderIdGrid extends ConsumerWidget {
                 '${order.id}',
                 style: TextStyle(
                   color: isHighlighted ? Colors.black87 : Colors.white, // ハイライト時は黒文字、通常は白文字
-                  fontSize: 120,
+                  fontSize: order.id != null && order.id! >= 100 ? 100 : 120,
                   fontWeight: FontWeight.bold
                 ),
               )
